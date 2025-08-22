@@ -9,10 +9,9 @@
   <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
 
-  <!-- Icons / Telegram / Ad SDK -->
+  <!-- Icons / Ad SDK -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <script src='//libtl.com/sdk.js' data-zone='9731188' data-sdk='show_9731188'></script>
+<script src='//libtl.com/sdk.js' data-zone='9731188' data-sdk='show_9731188'></script>
 
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Netflix Sans','Helvetica Neue',Helvetica,Arial,sans-serif; }
@@ -23,9 +22,10 @@
     .loading-text { color: #aaa; font-size: 18px; animation: fadeInOut 2s infinite; }
     @keyframes pulse-loader { 0%{transform:scale(1);opacity:.8}50%{transform:scale(1.1);opacity:1}100%{transform:scale(1);opacity:.8} }
     @keyframes fadeInOut { 0%,100%{opacity:.5}50%{opacity:1} }
-
+    
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     .page { display: none; }
-    .page.active { display: block; }
+    .page.active { display: block; animation: fadeIn 0.4s ease-in-out; }
 
     .header { background: linear-gradient(to bottom, rgba(0,0,0,.9), rgba(0,0,0,.7)); padding: 15px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; backdrop-filter: blur(10px); }
     .logo { font-size: 28px; font-weight: 700; color: #e50914; letter-spacing: -1px; }
@@ -70,19 +70,15 @@
     .detail-backdrop { width: 100%; height: 300px; position: relative; }
     .detail-backdrop img { width: 100%; height: 100%; object-fit: cover; }
     .detail-backdrop::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, #000 20%, rgba(0,0,0,0.7) 60%, transparent 100%); }
-
     .detail-content { padding: 0 15px; display: flex; margin-top: -120px; position: relative; z-index: 10; align-items: flex-end; }
     .detail-poster { width: 120px; height: 180px; border-radius: 10px; overflow: hidden; border: 2px solid rgba(255,255,255,0.2); margin-right: 15px; box-shadow: 0 10px 30px rgba(0,0,0,.5); flex-shrink: 0; transition: transform 0.3s, box-shadow 0.3s; }
     .detail-poster:hover { transform: scale(1.05); box-shadow: 0 0 25px rgba(229, 9, 20, 0.5); }
     .detail-poster img { width: 100%; height: 100%; object-fit: cover; }
-    
     .detail-info { flex: 1; min-width: 0; }
     .detail-title { font-size: 26px; font-weight: 700; margin-bottom: 12px; line-height: 1.2; text-shadow: 0 2px 5px rgba(0,0,0,0.7); }
-    
     .detail-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
     .meta-tag { background: rgba(255, 255, 255, 0.1); padding: 5px 12px; border-radius: 15px; font-size: 12px; font-weight: 500; border: 1px solid rgba(255, 255, 255, 0.2); backdrop-filter: blur(8px); display: flex; align-items: center; gap: 5px; }
     .meta-tag i { color: #e50914; }
-
     .detail-actions { margin-top: 20px; display: flex; justify-content: center; }
     .detail-bottom-content { padding: 25px 15px; }
     .detail-section { margin-bottom: 30px; }
@@ -90,37 +86,33 @@
     .detail-section-title::before { content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%); width: 5px; height: 20px; background: #e50914; border-radius: 3px; }
     .detail-storyline { font-size: 14px; color: #aaa; line-height: 1.6; background: #111; padding: 15px; border-radius: 8px; }
     
-    .category-page-header { padding: 15px; }
-    .category-page-title { font-size: 24px; font-weight: 700; }
-    .content-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; padding: 0 15px 15px; }
-    .content-grid .content-card { flex: auto; }
-
-    .btn-small { padding: 6px 12px; font-size: 12px; border-radius: 6px; box-shadow: none; background: rgba(255,255,255,.15); color: #fff; border: none; cursor: pointer; }
-    .btn-small:hover { background: rgba(255,255,255,.25); }
-
-    .episodes-list { display: none; }
-    .episode-item { background: #181818; border-radius: 10px; padding: 12px; margin-bottom: 12px; display: flex; align-items: center; transition: .3s; border: 1px solid #333; border-left: 3px solid transparent; }
-    .episode-item:hover { background: #222; border-left: 3px solid #e50914; }
-    .episode-thumbnail { width: 100px; height: 56px; background: #333; border-radius: 6px; margin-right: 12px; overflow: hidden; flex-shrink: 0; }
+    /* --- Horizontal Episode Cards --- */
+    .episode-card { flex: 0 0 160px; background-color: #181818; border-radius: 10px; overflow: hidden; cursor: pointer; transition: transform 0.2s ease-in-out; }
+    .episode-card:hover { transform: scale(1.05); }
+    .episode-thumbnail { position: relative; width: 100%; aspect-ratio: 16/9; }
     .episode-thumbnail img { width: 100%; height: 100%; object-fit: cover; }
-    .episode-info { flex: 1; }
-    .episode-title { font-size: 15px; font-weight: 700; margin-bottom: 5px; color: #fff; }
-    .episode-meta { font-size: 13px; color: #aaa; }
-    .episode-play { background: #e50914; color: #fff; border: none; width: 40px; height: 40px; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; font-size: 16px; transition: .3s; margin-left: 10px; }
-    .episode-play:hover { background: #c40812; transform: scale(1.1); }
-    
+    .play-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; font-size: 32px; color: white; opacity: 0; transition: opacity 0.3s; }
+    .episode-card:hover .play-overlay { opacity: 1; }
+    .episode-info { padding: 10px; }
+    .episode-title { font-size: 13px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
     .cast-card { flex: 0 0 90px; text-align: center; }
     .cast-card img { width: 80px; height: 120px; border-radius: 8px; object-fit: cover; border: 2px solid #333; margin-bottom: 8px; }
     .cast-name { font-size: 12px; color: #ccc; line-height: 1.3; }
-
+    
+    .category-page-header { padding: 15px; }
+    .category-page-title { font-size: 24px; font-weight: 700; }
+    .content-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; padding: 0 15px 15px; }
+    
     .video-player { position: fixed; inset: 0; background: #000; z-index: 1000; display: none; }
     .video-close { position: absolute; top: 15px; right: 15px; background: rgba(0,0,0,.7); color: #fff; border: none; width: 40px; height: 40px; border-radius: 50%; font-size: 20px; cursor: pointer; z-index: 1001; transition: .3s; }
     .video-close:hover { background: rgba(229,9,20,.8); transform: scale(1.1); }
     .back-btn { position: fixed; top: 15px; left: 15px; background: rgba(0,0,0,.7); color: #fff; border: none; width: 40px; height: 40px; border-radius: 50%; font-size: 18px; cursor: pointer; z-index: 101; display: none; transition: .3s; }
     .back-btn:hover { background: rgba(229,9,20,.8); transform: scale(1.1); }
+    
     .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,.85); color: #fff; padding: 10px 20px; border-radius: 6px; font-size: 14px; z-index: 2000; opacity: 0; transition: opacity .3s, transform .3s; }
     .toast.show { opacity: 1; transform: translateX(-50%) translateY(-10px); }
-
+    
     .button { display: flex; justify-content: center; align-items: center; color: #fff; width: 80px; height: 80px; border-radius: 100%; background: linear-gradient(30deg, rgb(255, 0, 0) 20%, rgb(255, 0, 0) 80%); transition: all 0.3s ease-in-out 0s; box-shadow: rgba(255, 0, 0, 0.6) 0px 0px 0px 0px; animation: pulse 1.2s cubic-bezier(0.8, 0, 0, 1) 0s infinite normal none running; border: 0; cursor: pointer; }
     .button:is(:hover, :focus) { transform: scale(1.2); }
     @keyframes pulse { 100% { box-shadow: 0 0 0 45px rgba(255, 0, 0, 0); } }
@@ -129,12 +121,11 @@
 <body>
   <div class="loading-screen" id="loading-screen">
     <div class="loading-logo">Flix Hub HD</div>
-    <div class="loading-text">Loading...</div>
+    <div class="loading-text" id="loading-text">Loading...</div>
   </div>
 
   <button class="back-btn" id="back-btn" onclick="goBack()"><i class="fas fa-arrow-left"></i></button>
 
-  <!-- HOME -->
   <div id="home-page" class="page active">
     <div class="header">
       <div class="logo">Flix Hub HD</div>
@@ -151,7 +142,6 @@
     <div id="search-results-container" style="display:none;"></div>
   </div>
 
-  <!-- DETAIL PAGE -->
   <div id="detail-page" class="page">
     <div class="detail-backdrop" id="detail-backdrop"></div>
     <div class="detail-content">
@@ -176,11 +166,8 @@
         <div class="content-slider" id="cast-slider"></div>
       </div>
       <div class="detail-section" id="episodes-section" style="display:none;">
-        <div class="episodes-header">
-            <h3 class="detail-section-title">Episodes</h3>
-            <button class="btn-small" id="toggle-episodes" onclick="toggleEpisodes()">Show All</button>
-        </div>
-        <div class="episodes-list" id="episodes-list"></div>
+        <h3 class="detail-section-title">Episodes</h3>
+        <div class="content-slider" id="episodes-list"></div>
       </div>
       <div class="detail-section">
         <h3 class="detail-section-title">More Like This</h3>
@@ -189,20 +176,17 @@
     </div>
   </div>
 
-  <!-- CATEGORY PAGE -->
   <div id="category-page" class="page">
     <div class="category-page-header"><h1 id="category-page-title" class="category-page-title"></h1></div>
     <div id="category-content-grid" class="content-grid"></div>
   </div>
 
-  <!-- VIDEO PLAYER -->
   <div class="video-player" id="video-player">
     <button class="video-close" onclick="closeVideoPlayer()"><i class="fas fa-times"></i></button>
     <iframe id="iframe-player" style="width:100%;height:100%;border:none;display:none;" allowfullscreen></iframe>
     <video id="native-player" style="width:100%;height:100%;display:none;" controls autoplay></video>
   </div>
 
-  <!-- Toast container -->
   <div id="toast" class="toast"></div>
 
   <script>
@@ -225,48 +209,56 @@
     const renderAllDebounced = debounce(renderAll);
 
     document.addEventListener('DOMContentLoaded', () => {
-      Telegram.WebApp.ready();
-      setTimeout(() => {
-        document.getElementById('loading-screen').style.display = 'none';
-        setupRealtimeListeners();
-        show_9731188().then(() => { Telegram.WebApp.showAlert('Welcome!'); });
-      }, 2500);
+      loadAndRenderInitialData();
     });
 
-    function setupRealtimeListeners(){
+    async function loadAndRenderInitialData() {
+        try {
+            const [moviesSnapshot, webseriesSnapshot, categoriesSnapshot] = await Promise.all([
+                database.ref('movies').once('value'),
+                database.ref('webseries').once('value'),
+                database.ref('categories').once('value')
+            ]);
+            if (moviesSnapshot.exists()) moviesSnapshot.forEach(s => moviesCache.push({ id: s.key, ...s.val() }));
+            if (webseriesSnapshot.exists()) webseriesSnapshot.forEach(s => webseriesCache.push({ id: s.key, ...s.val() }));
+            if (categoriesSnapshot.exists()) categoriesSnapshot.forEach(snap => { const v = snap.val(); if (typeof v === 'string') categories.push(v.trim()); });
+            renderAll();
+            document.getElementById('loading-screen').style.display = 'none';
+            setupRealtimeListenersForUpdates();
+            show_9731188().then(() => { alert('Welcome!'); });
+        } catch (error) {
+            console.error("Failed to load initial data:", error);
+            document.getElementById('loading-text').textContent = 'Failed to load data. Please refresh.';
+        }
+    }
+
+    function setupRealtimeListenersForUpdates(){
       unsubscribeFns.forEach(off => { try{off();}catch(e){} });
       unsubscribeFns = [];
       const catRef = database.ref('categories');
       const moviesRef = database.ref('movies');
       const webRef = database.ref('webseries');
-
-      const catHandler = catRef.on('value', snap => {
+      catRef.on('value', snap => {
         const temp = [];
         if (snap.exists()) snap.forEach(s => { const v = s.val(); if (typeof v === 'string') temp.push(v.trim()); });
         categories = temp;
         renderAllDebounced();
         showToast('Categories updated');
       });
-      unsubscribeFns.push(() => catRef.off('value', catHandler));
-
-      const movieHandler = moviesRef.on('value', snap => {
+      moviesRef.on('value', snap => {
         const arr = [];
         if (snap.exists()) snap.forEach(s => { const val = s.val(); if (val && typeof val==='object' && val.title) arr.push({ id: s.key, ...val }); });
         moviesCache = arr;
         renderAllDebounced();
         showToast('Movies list updated');
       });
-      unsubscribeFns.push(() => moviesRef.off('value', movieHandler));
-
-      const webHandler = webRef.on('value', snap => {
+      webRef.on('value', snap => {
         const arr = [];
         if (snap.exists()) snap.forEach(s => { const val = s.val(); if (val && typeof val==='object' && val.title) arr.push({ id: s.key, ...val }); });
         webseriesCache = arr;
         renderAllDebounced();
         showToast('Webseries list updated');
       });
-      unsubscribeFns.push(() => webRef.off('value', webHandler));
-      renderAll();
     }
 
     function renderAll(){
@@ -278,7 +270,7 @@
       }
       updateSlider();
       renderDynamicCategories();
-      if (currentContent && !allContent.some(c => c.id === currentContent.id)){
+      if (currentContent && !allContent.some(c => c.id === currentContent.id)) {
         currentContent = null;
         showPage('home-page');
       }
@@ -306,7 +298,7 @@
     function createCastCard(actor) {
         const card = document.createElement('div');
         card.className = 'cast-card';
-        const imgSrc = actor.profile_path ? `https://image.tmdb.org/t/p/w185${actor.profile_path}` : 'https://i.imgur.com/Z2MY6Y1.png'; // Placeholder
+        const imgSrc = actor.profile_path ? `https://image.tmdb.org/t/p/w185${actor.profile_path}` : 'https://i.imgur.com/Z2MY6Y1.png';
         card.innerHTML = `<img src="${imgSrc}" alt="${actor.name}"><div class="cast-name">${actor.name}</div>`;
         return card;
     }
@@ -333,49 +325,56 @@
     }
 
     function showDetailPage(item) {
-      currentContent = item;
-      if (sliderInterval) clearInterval(sliderInterval);
+        currentContent = item;
+        if (sliderInterval) clearInterval(sliderInterval);
 
-      document.getElementById('detail-backdrop').innerHTML = `<img src="${item.backdrop}" alt="" onerror="this.style.display='none'">`;
-      document.getElementById('detail-poster').innerHTML = `<img src="${item.poster}" alt="" onerror="this.style.display='none'">`;
-      document.getElementById('detail-title').textContent = item.title;
-      
-      document.getElementById('detail-meta').innerHTML = `
-        <div class="meta-tag"><i class="fas fa-calendar"></i> ${item.year || 'N/A'}</div>
-        <div class="meta-tag"><i class="fas fa-star"></i> ${item.rating || 'N/A'}</div>
-        <div class="meta-tag"><i class="fas fa-language"></i> ${item.language || 'N/A'}</div>`;
-      document.getElementById('detail-storyline').textContent = item.storyline || '';
+        document.getElementById('detail-backdrop').innerHTML = `<img src="${item.backdrop}" alt="" onerror="this.style.display='none'">`;
+        document.getElementById('detail-poster').innerHTML = `<img src="${item.poster}" alt="" onerror="this.style.display='none'">`;
+        document.getElementById('detail-title').textContent = item.title;
+        
+        document.getElementById('detail-meta').innerHTML = `
+            <div class="meta-tag"><i class="fas fa-calendar"></i> ${item.year || 'N/A'}</div>
+            <div class="meta-tag"><i class="fas fa-star"></i> ${item.rating || 'N/A'}</div>
+            <div class="meta-tag"><i class="fas fa-language"></i> ${item.language || 'N/A'}</div>`;
+        document.getElementById('detail-storyline').textContent = item.storyline || '';
 
-      const castSection = document.getElementById('cast-section');
-      const castSlider = document.getElementById('cast-slider');
-      if (item.cast && item.cast.length > 0) {
-        castSlider.innerHTML = '';
-        item.cast.forEach(actor => castSlider.appendChild(createCastCard(actor)));
-        castSection.style.display = 'block';
-      } else {
-        castSection.style.display = 'none';
-      }
-      
-      const episodesSection = document.getElementById('episodes-section');
-      if (item.type === 'webseries' && item.episodes?.length > 0) {
-        episodesSection.style.display = 'block';
+        const castSection = document.getElementById('cast-section');
+        const castSlider = document.getElementById('cast-slider');
+        if (item.cast && item.cast.length > 0) {
+            castSlider.innerHTML = '';
+            item.cast.forEach(actor => castSlider.appendChild(createCastCard(actor)));
+            castSection.style.display = 'block';
+        } else {
+            castSection.style.display = 'none';
+        }
+        
+        const episodesSection = document.getElementById('episodes-section');
         const episodesList = document.getElementById('episodes-list');
-        episodesList.innerHTML = '';
-        item.episodes.forEach(ep => {
-          episodesList.innerHTML += `<div class="episode-item"><div class="episode-thumbnail"><img src="${item.poster}" alt=""></div><div class="episode-info"><div class="episode-title">${item.title} - S${ep.session}E${ep.number}</div></div><button class="episode-play" onclick="playEpisode('${ep.link}')"><i class="fas fa-play"></i></button></div>`;
-        });
-        document.getElementById('episodes-list').style.display = 'none';
-        document.getElementById('toggle-episodes').textContent = 'Show All';
-      } else {
-        episodesSection.style.display = 'none';
-      }
+        if (item.type === 'webseries' && item.episodes?.length > 0) {
+            episodesSection.style.display = 'block';
+            episodesList.innerHTML = '';
+            item.episodes.forEach(ep => {
+                episodesList.innerHTML += `
+                    <div class="episode-card" onclick="playEpisode('${ep.link}')">
+                        <div class="episode-thumbnail">
+                            <img src="${item.poster}" alt="Episode Thumbnail" onerror="this.src='https://i.imgur.com/Z2MY6Y1.png';">
+                            <div class="play-overlay"><i class="fas fa-play"></i></div>
+                        </div>
+                        <div class="episode-info">
+                            <div class="episode-title">S${ep.session} E${ep.number}</div>
+                        </div>
+                    </div>`;
+            });
+        } else {
+            episodesSection.style.display = 'none';
+        }
 
-      const similarSlider = document.getElementById('similar-slider');
-      similarSlider.innerHTML = '';
-      const similarContent = allContent.filter(c => c.id !== item.id && c.category && item.category && c.category.trim().toLowerCase() === item.category.trim().toLowerCase()).slice(0, 10);
-      similarContent.forEach(content => similarSlider.appendChild(createContentCard(content)));
-      
-      showPage('detail-page');
+        const similarSlider = document.getElementById('similar-slider');
+        similarSlider.innerHTML = '';
+        const similarContent = allContent.filter(c => c.id !== item.id && c.category && item.category && c.category.trim().toLowerCase() === item.category.trim().toLowerCase()).slice(0, 10);
+        similarContent.forEach(content => similarSlider.appendChild(createContentCard(content)));
+        
+        showPage('detail-page');
     }
 
     function showCategoryPage(categoryName) {
@@ -383,7 +382,9 @@
       const grid = document.getElementById('category-content-grid');
       grid.innerHTML = '';
       const categoryContent = allContent.filter(item => item && item.category && typeof item.category === 'string' && item.category.trim().toLowerCase() === categoryName.trim().toLowerCase());
-      categoryContent.forEach(item => grid.appendChild(createContentCard(item)));
+      if (categoryContent.length > 0) {
+        categoryContent.forEach(item => grid.appendChild(createContentCard(item)));
+      }
       showPage('category-page');
     }
 
@@ -443,18 +444,21 @@
     }
 
     function openVideoPlayer(url) {
-      const playerContainer = document.getElementById('video-player');
-      const iframePlayer = document.getElementById('iframe-player');
-      const nativePlayer = document.getElementById('native-player');
-      iframePlayer.style.display = 'none'; nativePlayer.style.display = 'none';
-      const directFileExtensions = ['.mkv', '.mp4', '.webm', '.mov', '.avi', '.flv'];
-      const isDirectFile = directFileExtensions.some(ext => url.toLowerCase().includes(ext)) || url.includes('pixeldrain.dev/api/file');
-      if (isDirectFile) {
-        nativePlayer.src = url; nativePlayer.style.display = 'block';
-      } else {
-        iframePlayer.src = url; iframePlayer.style.display = 'block';
-      }
-      playerContainer.style.display = 'block';
+        const playerContainer = document.getElementById('video-player');
+        const iframePlayer = document.getElementById('iframe-player');
+        const nativePlayer = document.getElementById('native-player');
+        iframePlayer.style.display = 'none';
+        nativePlayer.style.display = 'none';
+        const directFileExtensions = ['.mkv', '.mp4', '.webm', '.mov', '.avi', '.flv', '.m3u8', '.ts'];
+        const isDirectFile = directFileExtensions.some(ext => url.toLowerCase().includes(ext)) || url.includes('pixeldrain.dev/api/file') || url.includes('ftpbd.net') || url.includes('ydns.eu') || url.includes('discoveryftp.net');
+        if (isDirectFile) {
+            nativePlayer.src = url;
+            nativePlayer.style.display = 'block';
+        } else {
+            iframePlayer.src = url;
+            iframePlayer.style.display = 'block';
+        }
+        playerContainer.style.display = 'block';
     }
 
     function closeVideoPlayer() {
@@ -465,6 +469,7 @@
       iframePlayer.src = 'about:blank';
       if (!nativePlayer.paused) { nativePlayer.pause(); }
       nativePlayer.src = '';
+      nativePlayer.removeAttribute('src');
       nativePlayer.load();
     }
 
@@ -473,14 +478,14 @@
         if (!currentContent) return;
         let videoUrl = (currentContent.type === 'movie') ? currentContent.link : currentContent.episodes?.[0]?.link;
         if (videoUrl) openVideoPlayer(videoUrl);
-        else Telegram.WebApp.showAlert('No content to play');
+        else alert('No content to play');
       });
     }
 
     function playEpisode(link) {
       show_9731188().then(() => {
         if (link) openVideoPlayer(link);
-        else Telegram.WebApp.showAlert('Link is missing.');
+        else alert('Link is missing.');
       });
     }
 
@@ -500,19 +505,11 @@
       if (filteredContent.length > 0) {
         filteredContent.forEach(item => grid.appendChild(createContentCard(item)));
       } else {
-        grid.innerHTML = '<p style="padding:20px 15px;color:#aaa;">No results found.</p>';
+        grid.innerHTML = `<p style="padding: 20px 15px; color: #aaa; grid-column: 1 / -1; text-align: center;">No results found for "${searchTerm}"</p>`;
       }
       searchContainer.appendChild(section);
       categoriesContainer.style.display = 'none';
       searchContainer.style.display = 'block';
-    }
-
-    function toggleEpisodes() {
-      const list = document.getElementById('episodes-list');
-      const btn  = document.getElementById('toggle-episodes');
-      const isHidden = list.style.display === 'none' || !list.style.display;
-      list.style.display = isHidden ? 'block' : 'none';
-      btn.textContent = isHidden ? 'Hide' : 'Show All';
     }
   </script>
 </body>
