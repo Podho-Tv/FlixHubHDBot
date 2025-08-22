@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Flix Hub HD - Stream Movies & Web Series</title>
+  <title>Flix Hub HD</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <!-- Firebase -->
@@ -11,7 +11,7 @@
 
   <!-- Icons / Ad SDK -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
-<script src='//libtl.com/sdk.js' data-zone='9731188' data-sdk='show_9731188'></script>
+  <script src='//libtl.com/sdk.js' data-zone='9731188' data-sdk='show_9731188'></script>
 
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Netflix Sans','Helvetica Neue',Helvetica,Arial,sans-serif; }
@@ -327,17 +327,14 @@
     function showDetailPage(item) {
         currentContent = item;
         if (sliderInterval) clearInterval(sliderInterval);
-
         document.getElementById('detail-backdrop').innerHTML = `<img src="${item.backdrop}" alt="" onerror="this.style.display='none'">`;
         document.getElementById('detail-poster').innerHTML = `<img src="${item.poster}" alt="" onerror="this.style.display='none'">`;
         document.getElementById('detail-title').textContent = item.title;
-        
         document.getElementById('detail-meta').innerHTML = `
             <div class="meta-tag"><i class="fas fa-calendar"></i> ${item.year || 'N/A'}</div>
             <div class="meta-tag"><i class="fas fa-star"></i> ${item.rating || 'N/A'}</div>
             <div class="meta-tag"><i class="fas fa-language"></i> ${item.language || 'N/A'}</div>`;
         document.getElementById('detail-storyline').textContent = item.storyline || '';
-
         const castSection = document.getElementById('cast-section');
         const castSlider = document.getElementById('cast-slider');
         if (item.cast && item.cast.length > 0) {
@@ -347,7 +344,6 @@
         } else {
             castSection.style.display = 'none';
         }
-        
         const episodesSection = document.getElementById('episodes-section');
         const episodesList = document.getElementById('episodes-list');
         if (item.type === 'webseries' && item.episodes?.length > 0) {
@@ -368,12 +364,10 @@
         } else {
             episodesSection.style.display = 'none';
         }
-
         const similarSlider = document.getElementById('similar-slider');
         similarSlider.innerHTML = '';
         const similarContent = allContent.filter(c => c.id !== item.id && c.category && item.category && c.category.trim().toLowerCase() === item.category.trim().toLowerCase()).slice(0, 10);
         similarContent.forEach(content => similarSlider.appendChild(createContentCard(content)));
-        
         showPage('detail-page');
     }
 
@@ -449,8 +443,13 @@
         const nativePlayer = document.getElementById('native-player');
         iframePlayer.style.display = 'none';
         nativePlayer.style.display = 'none';
+        
         const directFileExtensions = ['.mkv', '.mp4', '.webm', '.mov', '.avi', '.flv', '.m3u8', '.ts'];
-        const isDirectFile = directFileExtensions.some(ext => url.toLowerCase().includes(ext)) || url.includes('pixeldrain.dev/api/file') || url.includes('ftpbd.net') || url.includes('ydns.eu') || url.includes('discoveryftp.net');
+        const directFileDomains = ['pixeldrain.dev/api/file', 'ftpbd.net', 'ydns.eu', 'discoveryftp.net', 'sarail.net'];
+        
+        const isDirectFile = directFileExtensions.some(ext => url.toLowerCase().includes(ext)) || 
+                           directFileDomains.some(domain => url.includes(domain));
+
         if (isDirectFile) {
             nativePlayer.src = url;
             nativePlayer.style.display = 'block';
@@ -460,6 +459,7 @@
         }
         playerContainer.style.display = 'block';
     }
+
 
     function closeVideoPlayer() {
       const playerContainer = document.getElementById('video-player');
