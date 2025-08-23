@@ -11,6 +11,7 @@
 
   <!-- Icons / Ad SDK -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  
   <script src='//libtl.com/sdk.js' data-zone='9731188' data-sdk='show_9731188'></script>
 
   <style>
@@ -64,6 +65,11 @@
     .content-card-overlay { position: absolute; top: 8px; left: 8px; display: flex; flex-direction: column; gap: 5px; }
     .content-badge { background: rgba(0,0,0,.8); color: #fff; padding: 3px 8px; border-radius: 4px; font-size: 10px; font-weight: 700; text-transform: uppercase; backdrop-filter: blur(5px); }
     .content-title { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, rgba(0,0,0,.9), transparent); padding: 30px 10px 10px; font-size: 13px; font-weight: 700; text-align: center; text-shadow: 0 1px 2px rgba(0,0,0,.5); }
+    
+    .livetv-card { flex: 0 0 80px; text-align: center; }
+    .livetv-card img { width: 70px; height: 70px; border-radius: 50%; object-fit: cover; border: 2px solid #333; margin-bottom: 8px; cursor: pointer; transition: transform 0.2s; }
+    .livetv-card img:hover { transform: scale(1.1); }
+    .livetv-title { display: none; } /* Hide channel name */
 
     /* --- Detail Page Redesign --- */
     .detail-page { padding-top: 0; }
@@ -138,6 +144,12 @@
       <div class="slider" id="slider"></div>
       <div class="slider-indicators" id="slider-indicators"></div>
     </div>
+    <div id="livetv-section" class="category-section" style="display:none;">
+        <div class="category-header">
+            <h2 class="category-title">Live TV</h2>
+        </div>
+        <div class="content-slider" id="livetv-slider"></div>
+    </div>
     <div id="categories-container"></div>
     <div id="search-results-container" style="display:none;"></div>
   </div>
@@ -203,7 +215,7 @@
     const database = firebase.database();
 
     let allContent = [], categories = [], currentContent = null, sliderInterval = null, currentSlide = 0, pageHistory = ['home-page'];
-    let moviesCache = [], webseriesCache = [];
+    let moviesCache = [], webseriesCache = [], liveTVCache = [];
     let unsubscribeFns = [];
     function debounce(fn, wait=300){ let t; return (...args)=>{ clearTimeout(t); t=setTimeout(()=>fn(...args), wait); }; }
     const renderAllDebounced = debounce(renderAll);
@@ -214,14 +226,17 @@
 
     async function loadAndRenderInitialData() {
         try {
-            const [moviesSnapshot, webseriesSnapshot, categoriesSnapshot] = await Promise.all([
+            const [moviesSnapshot, webseriesSnapshot, categoriesSnapshot, liveTVSnapshot] = await Promise.all([
                 database.ref('movies').once('value'),
                 database.ref('webseries').once('value'),
-                database.ref('categories').once('value')
+                database.ref('categories').once('value'),
+                database.ref('livetv').once('value')
             ]);
             if (moviesSnapshot.exists()) moviesSnapshot.forEach(s => moviesCache.push({ id: s.key, ...s.val() }));
             if (webseriesSnapshot.exists()) webseriesSnapshot.forEach(s => webseriesCache.push({ id: s.key, ...s.val() }));
+            if (liveTVSnapshot.exists()) liveTVSnapshot.forEach(s => liveTVCache.push({ id: s.key, ...s.val() }));
             if (categoriesSnapshot.exists()) categoriesSnapshot.forEach(snap => { const v = snap.val(); if (typeof v === 'string') categories.push(v.trim()); });
+            
             renderAll();
             document.getElementById('loading-screen').style.display = 'none';
             setupRealtimeListenersForUpdates();
@@ -238,6 +253,8 @@
       const catRef = database.ref('categories');
       const moviesRef = database.ref('movies');
       const webRef = database.ref('webseries');
+      const liveTVRef = database.ref('livetv');
+      
       catRef.on('value', snap => {
         const temp = [];
         if (snap.exists()) snap.forEach(s => { const v = s.val(); if (typeof v === 'string') temp.push(v.trim()); });
@@ -245,6 +262,7 @@
         renderAllDebounced();
         showToast('Categories updated');
       });
+
       moviesRef.on('value', snap => {
         const arr = [];
         if (snap.exists()) snap.forEach(s => { const val = s.val(); if (val && typeof val==='object' && val.title) arr.push({ id: s.key, ...val }); });
@@ -252,12 +270,20 @@
         renderAllDebounced();
         showToast('Movies list updated');
       });
+
       webRef.on('value', snap => {
         const arr = [];
         if (snap.exists()) snap.forEach(s => { const val = s.val(); if (val && typeof val==='object' && val.title) arr.push({ id: s.key, ...val }); });
         webseriesCache = arr;
         renderAllDebounced();
         showToast('Webseries list updated');
+      });
+
+      liveTVRef.on('value', snap => {
+          liveTVCache = [];
+          if(snap.exists()) snap.forEach(s => liveTVCache.push({id: s.key, ...s.val()}));
+          renderLiveTV();
+          showToast('Live TV updated');
       });
     }
 
@@ -270,12 +296,13 @@
       }
       updateSlider();
       renderDynamicCategories();
+      renderLiveTV();
       if (currentContent && !allContent.some(c => c.id === currentContent.id)) {
         currentContent = null;
         showPage('home-page');
       }
     }
-
+    
     function showToast(msg){
       const el = document.getElementById('toast');
       if (!el) return;
@@ -381,6 +408,23 @@
       }
       showPage('category-page');
     }
+    
+    function renderLiveTV() {
+        const container = document.getElementById('livetv-section');
+        const slider = document.getElementById('livetv-slider');
+        if (liveTVCache.length > 0) {
+            slider.innerHTML = '';
+            liveTVCache.forEach(channel => {
+                const card = document.createElement('div');
+                card.className = 'livetv-card';
+                card.innerHTML = `<img src="${channel.poster}" alt="${channel.title}" onclick="playEpisode('${channel.link}')"><div class="livetv-title">${channel.title}</div>`;
+                slider.appendChild(card);
+            });
+            container.style.display = 'block';
+        } else {
+            container.style.display = 'none';
+        }
+    }
 
     function renderDynamicCategories() {
       const container = document.getElementById('categories-container');
@@ -443,13 +487,9 @@
         const nativePlayer = document.getElementById('native-player');
         iframePlayer.style.display = 'none';
         nativePlayer.style.display = 'none';
-        
         const directFileExtensions = ['.mkv', '.mp4', '.webm', '.mov', '.avi', '.flv', '.m3u8', '.ts'];
         const directFileDomains = ['pixeldrain.dev/api/file', 'ftpbd.net', 'ydns.eu', 'discoveryftp.net', 'sarail.net'];
-        
-        const isDirectFile = directFileExtensions.some(ext => url.toLowerCase().includes(ext)) || 
-                           directFileDomains.some(domain => url.includes(domain));
-
+        const isDirectFile = directFileExtensions.some(ext => url.toLowerCase().includes(ext)) || directFileDomains.some(domain => url.includes(domain));
         if (isDirectFile) {
             nativePlayer.src = url;
             nativePlayer.style.display = 'block';
@@ -459,7 +499,6 @@
         }
         playerContainer.style.display = 'block';
     }
-
 
     function closeVideoPlayer() {
       const playerContainer = document.getElementById('video-player');
