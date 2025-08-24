@@ -122,6 +122,36 @@
     .button { display: flex; justify-content: center; align-items: center; color: #fff; width: 80px; height: 80px; border-radius: 100%; background: linear-gradient(30deg, rgb(255, 0, 0) 20%, rgb(255, 0, 0) 80%); transition: all 0.3s ease-in-out 0s; box-shadow: rgba(255, 0, 0, 0.6) 0px 0px 0px 0px; animation: pulse 1.2s cubic-bezier(0.8, 0, 0, 1) 0s infinite normal none running; border: 0; cursor: pointer; }
     .button:is(:hover, :focus) { transform: scale(1.2); }
     @keyframes pulse { 100% { box-shadow: 0 0 0 45px rgba(255, 0, 0, 0); } }
+
+    /* START: NEW CSS FOR LIVE TV GRID */
+    .livetv-grid-card {
+        position: relative;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 8px rgba(0,0,0,.3);
+        transition: .3s;
+        cursor: pointer;
+        background-color: #181818;
+    }
+    .livetv-grid-card:hover {
+        transform: scale(1.05);
+        box-shadow: 0 8px 16px rgba(0,0,0,.5);
+    }
+    .livetv-grid-card img {
+        width: 100%;
+        aspect-ratio: 1/1; /* Make it square */
+        object-fit: cover;
+    }
+    .livetv-grid-card-title {
+        font-size: 13px;
+        font-weight: 700;
+        text-align: center;
+        padding: 10px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    /* END: NEW CSS */
   </style>
 </head>
 <body>
@@ -147,6 +177,9 @@
     <div id="livetv-section" class="category-section" style="display:none;">
         <div class="category-header">
             <h2 class="category-title">Live TV</h2>
+            <!-- START: ADDED SEE ALL BUTTON -->
+            <a href="#" class="see-all" id="livetv-see-all">See All</a>
+            <!-- END: ADDED SEE ALL BUTTON -->
         </div>
         <div class="content-slider" id="livetv-slider"></div>
     </div>
@@ -193,6 +226,13 @@
     <div id="category-content-grid" class="content-grid"></div>
   </div>
 
+  <!-- START: NEW PAGE FOR LIVE TV GRID -->
+  <div id="livetv-page" class="page">
+    <div class="category-page-header"><h1 class="category-page-title">Live TV Channels</h1></div>
+    <div id="livetv-content-grid" class="content-grid"></div>
+  </div>
+  <!-- END: NEW PAGE -->
+
   <div class="video-player" id="video-player">
     <button class="video-close" onclick="closeVideoPlayer()"><i class="fas fa-times"></i></button>
     <iframe id="iframe-player" style="width:100%;height:100%;border:none;display:none;" allowfullscreen></iframe>
@@ -216,75 +256,63 @@
 
     let allContent = [], categories = [], currentContent = null, sliderInterval = null, currentSlide = 0, pageHistory = ['home-page'];
     let moviesCache = [], webseriesCache = [], liveTVCache = [];
-    let unsubscribeFns = [];
-    function debounce(fn, wait=300){ let t; return (...args)=>{ clearTimeout(t); t=setTimeout(()=>fn(...args), wait); }; }
+    
+    function debounce(fn, wait = 300) { let t; return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), wait); }; }
     const renderAllDebounced = debounce(renderAll);
 
     document.addEventListener('DOMContentLoaded', () => {
-      loadAndRenderInitialData();
+        attachRealtimeListeners();
     });
 
-    async function loadAndRenderInitialData() {
-        try {
-            const [moviesSnapshot, webseriesSnapshot, categoriesSnapshot, liveTVSnapshot] = await Promise.all([
-                database.ref('movies').once('value'),
-                database.ref('webseries').once('value'),
-                database.ref('categories').once('value'),
-                database.ref('livetv').once('value')
-            ]);
-            if (moviesSnapshot.exists()) moviesSnapshot.forEach(s => moviesCache.push({ id: s.key, ...s.val() }));
-            if (webseriesSnapshot.exists()) webseriesSnapshot.forEach(s => webseriesCache.push({ id: s.key, ...s.val() }));
-            if (liveTVSnapshot.exists()) liveTVSnapshot.forEach(s => liveTVCache.push({ id: s.key, ...s.val() }));
-            if (categoriesSnapshot.exists()) categoriesSnapshot.forEach(snap => { const v = snap.val(); if (typeof v === 'string') categories.push(v.trim()); });
-            
-            renderAll();
-            document.getElementById('loading-screen').style.display = 'none';
-            setupRealtimeListenersForUpdates();
-            show_9731188().then(() => { alert('Welcome!'); });
-        } catch (error) {
-            console.error("Failed to load initial data:", error);
-            document.getElementById('loading-text').textContent = 'Failed to load data. Please refresh.';
+    function attachRealtimeListeners() {
+        let dataLoaded = { movies: false, series: false, tv: false, categories: false };
+        let initialLoadComplete = false;
+
+        function checkInitialLoad() {
+            if (initialLoadComplete) return;
+            if (Object.values(dataLoaded).every(status => status === true)) {
+                initialLoadComplete = true;
+                document.getElementById('loading-screen').style.display = 'none';
+                show_9731188().then(() => { alert('Welcome!'); });
+            }
         }
-    }
 
-    function setupRealtimeListenersForUpdates(){
-      unsubscribeFns.forEach(off => { try{off();}catch(e){} });
-      unsubscribeFns = [];
-      const catRef = database.ref('categories');
-      const moviesRef = database.ref('movies');
-      const webRef = database.ref('webseries');
-      const liveTVRef = database.ref('livetv');
-      
-      catRef.on('value', snap => {
-        const temp = [];
-        if (snap.exists()) snap.forEach(s => { const v = s.val(); if (typeof v === 'string') temp.push(v.trim()); });
-        categories = temp;
-        renderAllDebounced();
-        showToast('Categories updated');
-      });
+        database.ref('movies').on('value', snap => {
+            const arr = [];
+            if (snap.exists()) snap.forEach(s => { const val = s.val(); if (val && typeof val === 'object' && val.title) arr.push({ id: s.key, ...val }); });
+            moviesCache = arr;
+            if (!dataLoaded.movies) { dataLoaded.movies = true; checkInitialLoad(); }
+            renderAllDebounced();
+            showToast('Movies list updated');
+        });
 
-      moviesRef.on('value', snap => {
-        const arr = [];
-        if (snap.exists()) snap.forEach(s => { const val = s.val(); if (val && typeof val==='object' && val.title) arr.push({ id: s.key, ...val }); });
-        moviesCache = arr;
-        renderAllDebounced();
-        showToast('Movies list updated');
-      });
+        database.ref('webseries').on('value', snap => {
+            const arr = [];
+            if (snap.exists()) snap.forEach(s => { const val = s.val(); if (val && typeof val === 'object' && val.title) arr.push({ id: s.key, ...val }); });
+            webseriesCache = arr;
+            if (!dataLoaded.series) { dataLoaded.series = true; checkInitialLoad(); }
+            renderAllDebounced();
+            showToast('Webseries list updated');
+        });
+        
+        database.ref('categories').on('value', snap => {
+            const temp = [];
+            if (snap.exists()) snap.forEach(s => { const v = s.val(); if (typeof v === 'string') temp.push(v.trim()); });
+            categories = temp;
+            if (!dataLoaded.categories) { dataLoaded.categories = true; checkInitialLoad(); }
+            renderAllDebounced();
+        });
 
-      webRef.on('value', snap => {
-        const arr = [];
-        if (snap.exists()) snap.forEach(s => { const val = s.val(); if (val && typeof val==='object' && val.title) arr.push({ id: s.key, ...val }); });
-        webseriesCache = arr;
-        renderAllDebounced();
-        showToast('Webseries list updated');
-      });
-
-      liveTVRef.on('value', snap => {
-          liveTVCache = [];
-          if(snap.exists()) snap.forEach(s => liveTVCache.push({id: s.key, ...s.val()}));
-          renderLiveTV();
-          showToast('Live TV updated');
-      });
+        database.ref('livetv').on('value', snap => {
+            const newCache = [];
+            if (snap.exists()) {
+                snap.forEach(s => { newCache.push({ id: s.key, ...s.val() }); });
+            }
+            liveTVCache = newCache;
+            if (!dataLoaded.tv) { dataLoaded.tv = true; checkInitialLoad(); }
+            renderLiveTV();
+            showToast('Live TV updated');
+        });
     }
 
     function renderAll(){
@@ -311,8 +339,6 @@
       setTimeout(()=>{ el.classList.remove('show'); }, 2500);
     }
 
-    window.addEventListener('beforeunload', ()=>{ unsubscribeFns.forEach(off=>{ try{off();}catch(e){} }); });
-
     function createContentCard(item) {
       const card = document.createElement('div');
       card.className = 'content-card';
@@ -329,6 +355,19 @@
         card.innerHTML = `<img src="${imgSrc}" alt="${actor.name}"><div class="cast-name">${actor.name}</div>`;
         return card;
     }
+
+    // START: NEW FUNCTION TO CREATE LIVE TV GRID CARDS
+    function createLiveTVGridCard(channel) {
+        const card = document.createElement('div');
+        card.className = 'livetv-grid-card';
+        card.innerHTML = `
+        <img src="${channel.poster}" alt="${channel.title}" onerror="this.parentElement.style.display='none'">
+        <div class="livetv-grid-card-title">${channel.title}</div>
+        `;
+        card.onclick = () => playEpisode(channel.link);
+        return card;
+    }
+    // END: NEW FUNCTION
 
     function showPage(pageId) {
       document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -408,23 +447,48 @@
       }
       showPage('category-page');
     }
+
+    // START: NEW FUNCTION TO SHOW THE LIVE TV GRID PAGE
+    function showLiveTVPage() {
+        const grid = document.getElementById('livetv-content-grid');
+        grid.innerHTML = ''; // Clear previous content
+        if (liveTVCache && liveTVCache.length > 0) {
+            liveTVCache.forEach(channel => {
+                grid.appendChild(createLiveTVGridCard(channel));
+            });
+        }
+        showPage('livetv-page');
+    }
+    // END: NEW FUNCTION
     
+    // START: UPDATED FUNCTION
     function renderLiveTV() {
         const container = document.getElementById('livetv-section');
         const slider = document.getElementById('livetv-slider');
-        if (liveTVCache.length > 0) {
-            slider.innerHTML = '';
-            liveTVCache.forEach(channel => {
-                const card = document.createElement('div');
-                card.className = 'livetv-card';
-                card.innerHTML = `<img src="${channel.poster}" alt="${channel.title}" onclick="playEpisode('${channel.link}')"><div class="livetv-title">${channel.title}</div>`;
-                slider.appendChild(card);
-            });
+        const seeAllBtn = document.getElementById('livetv-see-all');
+
+        if (liveTVCache && liveTVCache.length > 0) {
+            const channelsHTML = liveTVCache.slice(0, 10).map(channel => `
+                <div class="livetv-card">
+                    <img src="${channel.poster}" alt="${channel.title}" onclick="playEpisode('${channel.link}')">
+                    <div class="livetv-title">${channel.title}</div>
+                </div>
+            `).join('');
+            
+            slider.innerHTML = channelsHTML;
             container.style.display = 'block';
+
+            seeAllBtn.style.display = 'block';
+            seeAllBtn.onclick = (e) => {
+                e.preventDefault();
+                showLiveTVPage();
+            };
         } else {
+            slider.innerHTML = '';
             container.style.display = 'none';
         }
     }
+    // END: UPDATED FUNCTION
 
     function renderDynamicCategories() {
       const container = document.getElementById('categories-container');
