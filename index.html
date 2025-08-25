@@ -31,10 +31,39 @@
     .header { background: linear-gradient(to bottom, rgba(0,0,0,.9), rgba(0,0,0,.7)); padding: 15px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; backdrop-filter: blur(10px); }
     .logo { font-size: 28px; font-weight: 700; color: #e50914; letter-spacing: -1px; }
 
-    .search-container { flex: 1; margin: 0 15px; position: relative; }
-    .search-input { width: 100%; padding: 10px 40px 10px 15px; background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.2); border-radius: 20px; color: #fff; font-size: 14px; transition: .3s; }
-    .search-input:focus { outline: none; background: rgba(255,255,255,.2); border-color: #e50914; }
-    .search-btn { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #aaa; cursor: pointer; font-size: 16px; }
+    .search {
+      display: inline-block;
+      position: relative;
+      flex: 1; 
+      margin: 0 15px;
+    }
+    .search input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 20px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      padding-right: 70px; 
+    }
+    .search button[type="submit"] {
+      background-color: #4e99e9;
+      border: none;
+      color: #fff;
+      cursor: pointer;
+      padding: 10px 20px;
+      border-radius: 20px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+      transition: .9s ease;
+    }
+    .search button[type="submit"]:hover {
+      transform: scale(1.1);
+      color: rgb(255, 255, 255);
+      background-color: blue;
+    }
 
     .slider-container { position: relative; width: 100%; height: 220px; overflow: hidden; margin-bottom: 25px; }
     .slider { display: flex; transition: transform .5s ease; height: 100%; }
@@ -69,9 +98,8 @@
     .livetv-card { flex: 0 0 80px; text-align: center; }
     .livetv-card img { width: 70px; height: 70px; border-radius: 50%; object-fit: cover; border: 2px solid #333; margin-bottom: 8px; cursor: pointer; transition: transform 0.2s; }
     .livetv-card img:hover { transform: scale(1.1); }
-    .livetv-title { display: none; } /* Hide channel name */
+    .livetv-title { display: none; }
 
-    /* --- Detail Page Redesign --- */
     .detail-page { padding-top: 0; }
     .detail-backdrop { width: 100%; height: 300px; position: relative; }
     .detail-backdrop img { width: 100%; height: 100%; object-fit: cover; }
@@ -92,7 +120,6 @@
     .detail-section-title::before { content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%); width: 5px; height: 20px; background: #e50914; border-radius: 3px; }
     .detail-storyline { font-size: 14px; color: #aaa; line-height: 1.6; background: #111; padding: 15px; border-radius: 8px; }
     
-    /* --- Horizontal Episode Cards --- */
     .episode-card { flex: 0 0 160px; background-color: #181818; border-radius: 10px; overflow: hidden; cursor: pointer; transition: transform 0.2s ease-in-out; }
     .episode-card:hover { transform: scale(1.05); }
     .episode-thumbnail { position: relative; width: 100%; aspect-ratio: 16/9; }
@@ -123,35 +150,10 @@
     .button:is(:hover, :focus) { transform: scale(1.2); }
     @keyframes pulse { 100% { box-shadow: 0 0 0 45px rgba(255, 0, 0, 0); } }
 
-    /* START: NEW CSS FOR LIVE TV GRID */
-    .livetv-grid-card {
-        position: relative;
-        border-radius: 8px;
-        overflow: hidden;
-        box-shadow: 0 4px 8px rgba(0,0,0,.3);
-        transition: .3s;
-        cursor: pointer;
-        background-color: #181818;
-    }
-    .livetv-grid-card:hover {
-        transform: scale(1.05);
-        box-shadow: 0 8px 16px rgba(0,0,0,.5);
-    }
-    .livetv-grid-card img {
-        width: 100%;
-        aspect-ratio: 1/1; /* Make it square */
-        object-fit: cover;
-    }
-    .livetv-grid-card-title {
-        font-size: 13px;
-        font-weight: 700;
-        text-align: center;
-        padding: 10px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-    /* END: NEW CSS */
+    .livetv-grid-card { position: relative; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 8px rgba(0,0,0,.3); transition: .3s; cursor: pointer; background-color: #181818; }
+    .livetv-grid-card:hover { transform: scale(1.05); box-shadow: 0 8px 16px rgba(0,0,0,.5); }
+    .livetv-grid-card img { width: 100%; aspect-ratio: 1/1; object-fit: cover; }
+    .livetv-grid-card-title { font-size: 13px; font-weight: 700; text-align: center; padding: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   </style>
 </head>
 <body>
@@ -165,25 +167,29 @@
   <div id="home-page" class="page active">
     <div class="header">
       <div class="logo">Flix Hub HD</div>
-      <div class="search-container">
-        <input type="text" class="search-input" id="search-input" placeholder="Search..." onkeyup="searchContent()" />
-        <button class="search-btn"><i class="fas fa-search"></i></button>
+      <div class="search">
+        <input placeholder="Search..." type="text" id="search-input" onkeyup="searchContent()">
+        <button type="submit" onclick="searchContent()">Go</button>
       </div>
     </div>
-    <div class="slider-container">
-      <div class="slider" id="slider"></div>
-      <div class="slider-indicators" id="slider-indicators"></div>
-    </div>
-    <div id="livetv-section" class="category-section" style="display:none;">
-        <div class="category-header">
-            <h2 class="category-title">Live TV</h2>
-            <!-- START: ADDED SEE ALL BUTTON -->
-            <a href="#" class="see-all" id="livetv-see-all">See All</a>
-            <!-- END: ADDED SEE ALL BUTTON -->
+    
+    <!-- START: MAIN CONTENT WRAPPER -->
+    <div id="main-content-container">
+        <div class="slider-container">
+          <div class="slider" id="slider"></div>
+          <div class="slider-indicators" id="slider-indicators"></div>
         </div>
-        <div class="content-slider" id="livetv-slider"></div>
+        <div id="livetv-section" class="category-section" style="display:none;">
+            <div class="category-header">
+                <h2 class="category-title">Live TV</h2>
+                <a href="#" class="see-all" id="livetv-see-all">See All</a>
+            </div>
+            <div class="content-slider" id="livetv-slider"></div>
+        </div>
+        <div id="categories-container"></div>
     </div>
-    <div id="categories-container"></div>
+    <!-- END: MAIN CONTENT WRAPPER -->
+
     <div id="search-results-container" style="display:none;"></div>
   </div>
 
@@ -226,12 +232,10 @@
     <div id="category-content-grid" class="content-grid"></div>
   </div>
 
-  <!-- START: NEW PAGE FOR LIVE TV GRID -->
   <div id="livetv-page" class="page">
     <div class="category-page-header"><h1 class="category-page-title">Live TV Channels</h1></div>
     <div id="livetv-content-grid" class="content-grid"></div>
   </div>
-  <!-- END: NEW PAGE -->
 
   <div class="video-player" id="video-player">
     <button class="video-close" onclick="closeVideoPlayer()"><i class="fas fa-times"></i></button>
@@ -356,7 +360,6 @@
         return card;
     }
 
-    // START: NEW FUNCTION TO CREATE LIVE TV GRID CARDS
     function createLiveTVGridCard(channel) {
         const card = document.createElement('div');
         card.className = 'livetv-grid-card';
@@ -367,7 +370,6 @@
         card.onclick = () => playEpisode(channel.link);
         return card;
     }
-    // END: NEW FUNCTION
 
     function showPage(pageId) {
       document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -448,10 +450,9 @@
       showPage('category-page');
     }
 
-    // START: NEW FUNCTION TO SHOW THE LIVE TV GRID PAGE
     function showLiveTVPage() {
         const grid = document.getElementById('livetv-content-grid');
-        grid.innerHTML = ''; // Clear previous content
+        grid.innerHTML = '';
         if (liveTVCache && liveTVCache.length > 0) {
             liveTVCache.forEach(channel => {
                 grid.appendChild(createLiveTVGridCard(channel));
@@ -459,9 +460,7 @@
         }
         showPage('livetv-page');
     }
-    // END: NEW FUNCTION
     
-    // START: UPDATED FUNCTION
     function renderLiveTV() {
         const container = document.getElementById('livetv-section');
         const slider = document.getElementById('livetv-slider');
@@ -488,7 +487,6 @@
             container.style.display = 'none';
         }
     }
-    // END: UPDATED FUNCTION
 
     function renderDynamicCategories() {
       const container = document.getElementById('categories-container');
@@ -546,15 +544,32 @@
     }
 
     function openVideoPlayer(url) {
+        if (!url) { console.error("Video URL is invalid."); return; }
         const playerContainer = document.getElementById('video-player');
         const iframePlayer = document.getElementById('iframe-player');
         const nativePlayer = document.getElementById('native-player');
         iframePlayer.style.display = 'none';
         nativePlayer.style.display = 'none';
+        const iframePlayerDomains = [ 'anym3u8player.com', 'livereacting.com', 'hlsplayer.net', 'player.autoembed.cc' ];
         const directFileExtensions = ['.mkv', '.mp4', '.webm', '.mov', '.avi', '.flv', '.m3u8', '.ts'];
-        const directFileDomains = ['pixeldrain.dev/api/file', 'ftpbd.net', 'ydns.eu', 'discoveryftp.net', 'sarail.net'];
-        const isDirectFile = directFileExtensions.some(ext => url.toLowerCase().includes(ext)) || directFileDomains.some(domain => url.includes(domain));
-        if (isDirectFile) {
+        const directFileDomains = [ 'pixeldrain.dev', 'ftpbd.net', 'sarail.net', 'ydns.eu', 'discoveryftp.net' ];
+        let isDirectLink = false;
+        try {
+            const urlObject = new URL(url);
+            const hostname = urlObject.hostname;
+            const pathname = urlObject.pathname.toLowerCase();
+            const isIframeDomain = iframePlayerDomains.some(domain => hostname.includes(domain));
+            if (isIframeDomain) { isDirectLink = false; } 
+            else {
+                const hasDirectExtension = directFileExtensions.some(ext => pathname.endsWith(ext));
+                const isDirectDomain = directFileDomains.some(domain => hostname.includes(domain));
+                isDirectLink = hasDirectExtension || isDirectDomain;
+            }
+        } catch (error) {
+            const lowerUrl = url.toLowerCase();
+            isDirectLink = directFileExtensions.some(ext => lowerUrl.endsWith(ext));
+        }
+        if (isDirectLink) {
             nativePlayer.src = url;
             nativePlayer.style.display = 'block';
         } else {
@@ -573,7 +588,7 @@
       if (!nativePlayer.paused) { nativePlayer.pause(); }
       nativePlayer.src = '';
       nativePlayer.removeAttribute('src');
-      nativePlayer.load();
+      try { nativePlayer.load(); } catch(e) {}
     }
 
     function playContent() {
@@ -592,28 +607,36 @@
       });
     }
 
+    // START: CORRECTED SEARCH FUNCTION
     function searchContent() {
       const searchTerm = document.getElementById('search-input').value.toLowerCase().trim();
-      const categoriesContainer = document.getElementById('categories-container');
+      const mainContentContainer = document.getElementById('main-content-container');
       const searchContainer = document.getElementById('search-results-container');
+      
       if (!searchTerm) {
-        searchContainer.style.display = 'none'; categoriesContainer.style.display = 'block'; return;
+        searchContainer.style.display = 'none'; 
+        mainContentContainer.style.display = 'block'; 
+        return;
       }
+
       const filteredContent = allContent.filter(item => (item.title||'').toLowerCase().includes(searchTerm));
       searchContainer.innerHTML = '';
       const section = document.createElement('div');
       section.className = 'category-section';
       section.innerHTML = `<div class="category-header"><h2 class="category-title">Search Results</h2></div><div class="content-grid"></div>`;
       const grid = section.querySelector('.content-grid');
+
       if (filteredContent.length > 0) {
         filteredContent.forEach(item => grid.appendChild(createContentCard(item)));
       } else {
         grid.innerHTML = `<p style="padding: 20px 15px; color: #aaa; grid-column: 1 / -1; text-align: center;">No results found for "${searchTerm}"</p>`;
       }
+      
       searchContainer.appendChild(section);
-      categoriesContainer.style.display = 'none';
+      mainContentContainer.style.display = 'none'; 
       searchContainer.style.display = 'block';
     }
+    // END: CORRECTED SEARCH FUNCTION
   </script>
 </body>
 </html>
