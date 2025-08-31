@@ -43,7 +43,7 @@
       border: none;
       border-radius: 20px;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      padding-right: 70px; 
+      padding-right: 70px; /* Make space for the button */
     }
     .search button[type="submit"] {
       background-color: #4e99e9;
@@ -98,7 +98,7 @@
     .livetv-card { flex: 0 0 80px; text-align: center; }
     .livetv-card img { width: 70px; height: 70px; border-radius: 50%; object-fit: cover; border: 2px solid #333; margin-bottom: 8px; cursor: pointer; transition: transform 0.2s; }
     .livetv-card img:hover { transform: scale(1.1); }
-    .livetv-title { display: none; }
+    .livetv-title { display: none; } 
 
     .detail-page { padding-top: 0; }
     .detail-backdrop { width: 100%; height: 300px; position: relative; }
@@ -173,7 +173,6 @@
       </div>
     </div>
     
-    <!-- START: MAIN CONTENT WRAPPER -->
     <div id="main-content-container">
         <div class="slider-container">
           <div class="slider" id="slider"></div>
@@ -188,7 +187,6 @@
         </div>
         <div id="categories-container"></div>
     </div>
-    <!-- END: MAIN CONTENT WRAPPER -->
 
     <div id="search-results-container" style="display:none;"></div>
   </div>
@@ -207,7 +205,12 @@
             <svg viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" width="26px"><path d="M424.4 214.7L72.4 6.6C43.8-10.3 0 6.1 0 47.9V464c0 37.5 40.7 60.1 72.4 41.3l352-208c31.4-18.5 31.5-64.1 0-82.6z" fill="currentColor"></path></svg>
         </button>
     </div>
+    <!-- START: REORDERED DETAIL PAGE CONTENT -->
     <div class="detail-bottom-content">
+      <div class="detail-section" id="episodes-section" style="display:none;">
+        <h3 class="detail-section-title">Episodes</h3>
+        <div class="content-slider" id="episodes-list"></div>
+      </div>
       <div class="detail-section">
         <h3 class="detail-section-title">Storyline</h3>
         <p class="detail-storyline" id="detail-storyline"></p>
@@ -216,15 +219,12 @@
         <h3 class="detail-section-title">Top Billed Cast</h3>
         <div class="content-slider" id="cast-slider"></div>
       </div>
-      <div class="detail-section" id="episodes-section" style="display:none;">
-        <h3 class="detail-section-title">Episodes</h3>
-        <div class="content-slider" id="episodes-list"></div>
-      </div>
       <div class="detail-section">
         <h3 class="detail-section-title">More Like This</h3>
         <div class="content-slider" id="similar-slider"></div>
       </div>
     </div>
+    <!-- END: REORDERED DETAIL PAGE CONTENT -->
   </div>
 
   <div id="category-page" class="page">
@@ -363,10 +363,7 @@
     function createLiveTVGridCard(channel) {
         const card = document.createElement('div');
         card.className = 'livetv-grid-card';
-        card.innerHTML = `
-        <img src="${channel.poster}" alt="${channel.title}" onerror="this.parentElement.style.display='none'">
-        <div class="livetv-grid-card-title">${channel.title}</div>
-        `;
+        card.innerHTML = `<img src="${channel.poster}" alt="${channel.title}" onerror="this.parentElement.style.display='none'"><div class="livetv-grid-card-title">${channel.title}</div>`;
         card.onclick = () => playEpisode(channel.link);
         return card;
     }
@@ -398,10 +395,7 @@
         document.getElementById('detail-backdrop').innerHTML = `<img src="${item.backdrop}" alt="" onerror="this.style.display='none'">`;
         document.getElementById('detail-poster').innerHTML = `<img src="${item.poster}" alt="" onerror="this.style.display='none'">`;
         document.getElementById('detail-title').textContent = item.title;
-        document.getElementById('detail-meta').innerHTML = `
-            <div class="meta-tag"><i class="fas fa-calendar"></i> ${item.year || 'N/A'}</div>
-            <div class="meta-tag"><i class="fas fa-star"></i> ${item.rating || 'N/A'}</div>
-            <div class="meta-tag"><i class="fas fa-language"></i> ${item.language || 'N/A'}</div>`;
+        document.getElementById('detail-meta').innerHTML = `<div class="meta-tag"><i class="fas fa-calendar"></i> ${item.year || 'N/A'}</div><div class="meta-tag"><i class="fas fa-star"></i> ${item.rating || 'N/A'}</div><div class="meta-tag"><i class="fas fa-language"></i> ${item.language || 'N/A'}</div>`;
         document.getElementById('detail-storyline').textContent = item.storyline || '';
         const castSection = document.getElementById('cast-section');
         const castSlider = document.getElementById('cast-slider');
@@ -418,16 +412,7 @@
             episodesSection.style.display = 'block';
             episodesList.innerHTML = '';
             item.episodes.forEach(ep => {
-                episodesList.innerHTML += `
-                    <div class="episode-card" onclick="playEpisode('${ep.link}')">
-                        <div class="episode-thumbnail">
-                            <img src="${item.poster}" alt="Episode Thumbnail" onerror="this.src='https://i.imgur.com/Z2MY6Y1.png';">
-                            <div class="play-overlay"><i class="fas fa-play"></i></div>
-                        </div>
-                        <div class="episode-info">
-                            <div class="episode-title">S${ep.session} E${ep.number}</div>
-                        </div>
-                    </div>`;
+                episodesList.innerHTML += `<div class="episode-card" onclick="playEpisode('${ep.link}')"><div class="episode-thumbnail"><img src="${item.poster}" alt="Episode Thumbnail" onerror="this.src='https://i.imgur.com/Z2MY6Y1.png';"><div class="play-overlay"><i class="fas fa-play"></i></div></div><div class="episode-info"><div class="episode-title">S${ep.session} E${ep.number}</div></div></div>`;
             });
         } else {
             episodesSection.style.display = 'none';
@@ -467,21 +452,11 @@
         const seeAllBtn = document.getElementById('livetv-see-all');
 
         if (liveTVCache && liveTVCache.length > 0) {
-            const channelsHTML = liveTVCache.slice(0, 10).map(channel => `
-                <div class="livetv-card">
-                    <img src="${channel.poster}" alt="${channel.title}" onclick="playEpisode('${channel.link}')">
-                    <div class="livetv-title">${channel.title}</div>
-                </div>
-            `).join('');
-            
+            const channelsHTML = liveTVCache.slice(0, 10).map(channel => `<div class="livetv-card"><img src="${channel.poster}" alt="${channel.title}" onclick="playEpisode('${channel.link}')"><div class="livetv-title">${channel.title}</div></div>`).join('');
             slider.innerHTML = channelsHTML;
             container.style.display = 'block';
-
             seeAllBtn.style.display = 'block';
-            seeAllBtn.onclick = (e) => {
-                e.preventDefault();
-                showLiveTVPage();
-            };
+            seeAllBtn.onclick = (e) => { e.preventDefault(); showLiveTVPage(); };
         } else {
             slider.innerHTML = '';
             container.style.display = 'none';
@@ -507,7 +482,7 @@
     function updateSlider() {
       const slider = document.getElementById('slider'), indicators = document.getElementById('slider-indicators'), sliderContainer = document.querySelector('.slider-container');
       slider.innerHTML = ''; indicators.innerHTML = '';
-      const sliderItems = allContent.filter(item => item.slider === 'on').slice(0, 5);
+      const sliderItems = allContent.filter(item => item.slider === 'on');
       if (sliderItems.length === 0) {
           sliderContainer.style.display = 'none';
           if (sliderInterval) clearInterval(sliderInterval);
@@ -607,7 +582,6 @@
       });
     }
 
-    // START: CORRECTED SEARCH FUNCTION
     function searchContent() {
       const searchTerm = document.getElementById('search-input').value.toLowerCase().trim();
       const mainContentContainer = document.getElementById('main-content-container');
@@ -636,7 +610,6 @@
       mainContentContainer.style.display = 'none'; 
       searchContainer.style.display = 'block';
     }
-    // END: CORRECTED SEARCH FUNCTION
   </script>
 </body>
 </html>
