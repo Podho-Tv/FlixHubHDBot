@@ -19,17 +19,32 @@
     body { background-color: #000; color: #fff; max-width: 480px; margin: 0 auto; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
 
     .loading-screen { position: fixed; inset: 0; background: #000; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 1000; }
-    .loading-logo { font-size: 48px; font-weight: 700; color: #00AFF0; margin-bottom: 20px; animation: pulse-loader 1.5s infinite; }
-    .loading-text { color: #aaa; font-size: 18px; animation: fadeInOut 2s infinite; }
-    @keyframes pulse-loader { 0%{transform:scale(1);opacity:.8}50%{transform:scale(1.1);opacity:1}100%{transform:scale(1);opacity:.8} }
+    .loading-text { color: #aaa; font-size: 18px; animation: fadeInOut 2s infinite; margin-top: 20px; }
     @keyframes fadeInOut { 0%,100%{opacity:.5}50%{opacity:1} }
     
+    /* START: NEW LOADER CSS */
+    .loader { display: flex; align-items: center; position: relative; }
+    .loader svg { margin: 0 2px; width: 40px; height: 64px; }
+    .absolute { position: absolute; }
+    .inline-block { display: inline-block; }
+    .w-2 { width: 0.5em; }
+    .dash { animation: dashArray 2s ease-in-out infinite, dashOffset 2s linear infinite; }
+    .spin { animation: spinDashArray 2s ease-in-out infinite, spin 8s ease-in-out infinite, dashOffset 2s linear infinite; transform-origin: center; }
+    @keyframes dashArray { 0% { stroke-dasharray: 0 1 359 0; } 50% { stroke-dasharray: 0 359 1 0; } 100% { stroke-dasharray: 359 1 0 0; } }
+    @keyframes spinDashArray { 0% { stroke-dasharray: 270 90; } 50% { stroke-dasharray: 0 360; } 100% { stroke-dasharray: 270 90; } }
+    @keyframes dashOffset { 0% { stroke-dashoffset: 365; } 100% { stroke-dashoffset: 5; } }
+    @keyframes spin { 0% { transform: rotate(0deg); } 12.5%, 25% { transform: rotate(270deg); } 37.5%, 50% { transform: rotate(540deg); } 62.5%, 75% { transform: rotate(810deg); } 87.5%, 100% { transform: rotate(1080deg); } }
+    .gradient-b { stroke: url(#b); }
+    .gradient-c { stroke: url(#c); }
+    .gradient-d { stroke: url(#d); }
+    /* END: NEW LOADER CSS */
+
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     .page { display: none; }
     .page.active { display: block; animation: fadeIn 0.4s ease-in-out; }
 
     .header { background: linear-gradient(to bottom, rgba(0,0,0,.9), rgba(0,0,0,.7)); padding: 15px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; backdrop-filter: blur(10px); }
-    .logo { font-size: 28px; font-weight: 700; color: #e50914; letter-spacing: -1px; }
+    .logo { font-size: 28px; font-weight: 700; color: #FF0000; letter-spacing: -1px; }
 
     .search {
       display: inline-block;
@@ -158,8 +173,36 @@
 </head>
 <body>
   <div class="loading-screen" id="loading-screen">
-    <div class="loading-logo">Flix Hub HD</div>
-    
+    <!-- START: NEW LOADER HTML -->
+    <div class="loader">
+      <svg class="absolute" width="0" height="0">
+        <defs>
+          <linearGradient id="b" x1="0" y1="62" x2="0" y2="2" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#973BED"></stop>
+            <stop offset="1" stop-color="#007CFF"></stop>
+          </linearGradient>
+          <linearGradient id="c" x1="0" y1="64" x2="0" y2="0" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#FFC800"></stop>
+            <stop offset="1" stop-color="#F0F"></stop>
+            <animateTransform attributeName="gradientTransform" type="rotate" values="0 32 32;-270 32 32;-540 32 32;-810 32 32;-1080 32 32" dur="8s" keyTimes="0;0.125;0.25;0.375;0.5;0.625;0.75;0.875;1" repeatCount="indefinite"></animateTransform>
+          </linearGradient>
+          <linearGradient id="d" x1="0" y1="62" x2="0" y2="2" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#00E0ED"></stop>
+            <stop offset="1" stop-color="#00DA72"></stop>
+          </linearGradient>
+        </defs>
+      </svg>
+      <svg viewBox="0 0 44 54" fill="none" xmlns="http://www.w3.org/2000/svg"><path pathLength="360" d="M10 5 H30 V15 H15 V25 H25 V35 H15 V50" class="dash gradient-b" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+      <svg viewBox="0 0 44 54" fill="none" xmlns="http://www.w3.org/2000/svg"><path pathLength="360" d="M10 5 V45 H30" class="dash gradient-c" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+      <svg viewBox="0 0 44 54" fill="none" xmlns="http://www.w3.org/2000/svg"><path pathLength="360" d="M22 5 V45" class="dash gradient-d" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+      <svg viewBox="0 0 44 54" fill="none" xmlns="http://www.w3.org/2000/svg"><path pathLength="360" d="M10 5 L34 45 M34 5 L10 45" class="dash gradient-b" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+      <svg viewBox="0 0 44 54" fill="none" xmlns="http://www.w3.org/2000/svg"><path pathLength="360" d="M10 5 V45 M30 5 V45 M10 25 H30" class="dash gradient-c" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+      <svg viewBox="0 0 44 54" fill="none" xmlns="http://www.w3.org/2000/svg"><path pathLength="360" d="M10 5 V35 Q22 45 34 35 V5" class="dash gradient-d" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+      <svg viewBox="0 0 44 54" fill="none" xmlns="http://www.w3.org/2000/svg"><path pathLength="360" d="M10 5 V45 H20 Q30 45 30 35 Q30 25 20 25 H30 Q40 25 40 15 Q40 5 30 5 H10" class="dash gradient-b" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+      <svg viewBox="0 0 44 54" fill="none" xmlns="http://www.w3.org/2000/svg"><path pathLength="360" d="M10 5 V45 M30 5 V45 M10 25 H30" class="dash gradient-c" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+      <svg viewBox="0 0 44 54" fill="none" xmlns="http://www.w3.org/2000/svg"><path pathLength="360" d="M10 5 V45 H20 Q30 45 30 25 Q30 5 20 5 H10" class="dash gradient-d" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+      <div class="w-2"></div>
+    </div>
   </div>
 
   <button class="back-btn" id="back-btn" onclick="goBack()"><i class="fas fa-arrow-left"></i></button>
@@ -205,7 +248,6 @@
             <svg viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" width="26px"><path d="M424.4 214.7L72.4 6.6C43.8-10.3 0 6.1 0 47.9V464c0 37.5 40.7 60.1 72.4 41.3l352-208c31.4-18.5 31.5-64.1 0-82.6z" fill="currentColor"></path></svg>
         </button>
     </div>
-    <!-- START: REORDERED DETAIL PAGE CONTENT -->
     <div class="detail-bottom-content">
       <div class="detail-section" id="episodes-section" style="display:none;">
         <h3 class="detail-section-title">Episodes</h3>
@@ -224,7 +266,6 @@
         <div class="content-slider" id="similar-slider"></div>
       </div>
     </div>
-    <!-- END: REORDERED DETAIL PAGE CONTENT -->
   </div>
 
   <div id="category-page" class="page">
@@ -246,16 +287,17 @@
   <div id="toast" class="toast"></div>
 
   <script>
-const firebaseConfig = {
-  apiKey: "AIzaSyAO3DL6Dmscz95p5s6F6f36ytMYTiqDVYg",
-  authDomain: "flix-hubhd.firebaseapp.com",
-  databaseURL: "https://flix-hubhd-default-rtdb.firebaseio.com",
-  projectId: "flix-hubhd",
-  storageBucket: "flix-hubhd.firebasestorage.app",
-  messagingSenderId: "604284029925",
-  appId: "1:604284029925:web:d14c1c4a1c4aa827d67d0c",
-  measurementId: "G-P7G2KMJ4ZY"
-};
+    const firebaseConfig = {
+      apiKey: "AIzaSyAO3DL6Dmscz95p5s6F6f36ytMYTiqDVYg",
+      authDomain: "flix-hubhd.firebaseapp.com",
+      databaseURL: "https://flix-hubhd-default-rtdb.firebaseio.com",
+      projectId: "flix-hubhd",
+      storageBucket: "flix-hubhd.firebasestorage.app",
+      messagingSenderId: "604284029925",
+      appId: "1:604284029925:web:d14c1c4a1c4aa827d67d0c",
+      measurementId: "G-P7G2KMJ4ZY"
+    };
+
     firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
 
