@@ -86,10 +86,7 @@
     .content-card-overlay { position: absolute; top: 8px; left: 8px; display: flex; flex-direction: column; gap: 5px; }
     .content-badge { background: rgba(0,0,0,.8); color: #fff; padding: 3px 8px; border-radius: 4px; font-size: 10px; font-weight: 700; text-transform: uppercase; backdrop-filter: blur(5px); }
     .content-title { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, rgba(0,0,0,.9), transparent); padding: 30px 10px 10px; font-size: 13px; font-weight: 700; text-align: center; text-shadow: 0 1px 2px rgba(0,0,0,.5); }
-    .livetv-card { flex: 0 0 80px; text-align: center; }
-    .livetv-card img { width: 70px; height: 70px; border-radius: 50%; object-fit: cover; border: 2px solid #333; margin-bottom: 8px; cursor: pointer; transition: transform 0.2s; }
-    .livetv-card img:hover { transform: scale(1.1); }
-    .livetv-title { display: none; }
+    
     .detail-page { padding-top: 0; }
     .detail-backdrop { width: 100%; height: 300px; position: relative; }
     .detail-backdrop img { width: 100%; height: 100%; object-fit: cover; }
@@ -103,87 +100,82 @@
     .detail-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
     .meta-tag { background: rgba(255, 255, 255, 0.1); padding: 5px 12px; border-radius: 15px; font-size: 12px; font-weight: 500; border: 1px solid rgba(255, 255, 255, 0.2); backdrop-filter: blur(8px); display: flex; align-items: center; gap: 5px; }
     .meta-tag i { color: #e50914; }
-    .detail-actions { margin-top: 20px; display: flex; justify-content: center; }
+    .detail-actions { margin-top: 20px; padding: 0 15px; display: flex; justify-content: center; gap: 10px; }
+    .detail-actions .btn { flex: 1; padding: 12px; border-radius: 8px; border: none; font-size: 16px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .detail-actions .btn.primary { background-color: #e50914; color: #fff; }
+    
+    /* START: Re-added Play Button Styles */
+    .button { display: flex; justify-content: center; align-items: center; color: #fff; width: 80px; height: 80px; border-radius: 100%; background: linear-gradient(30deg, rgb(255, 0, 0) 20%, rgb(255, 0, 0) 80%); transition: all 0.3s ease-in-out 0s; box-shadow: rgba(255, 0, 0, 0.6) 0px 0px 0px 0px; animation: pulse 1.2s cubic-bezier(0.8, 0, 0, 1) 0s infinite normal none running; border: 0; cursor: pointer; }
+    .button:is(:hover, :focus) { transform: scale(1.2); }
+    @keyframes pulse { 100% { box-shadow: 0 0 0 45px rgba(255, 0, 0, 0); } }
+    /* END: Re-added Play Button Styles */
+
     .detail-bottom-content { padding: 25px 15px; }
     .detail-section { margin-bottom: 30px; }
     .detail-section-title { font-size: 20px; font-weight: 700; color: #fff; position: relative; padding-left: 15px; margin-bottom: 15px; }
     .detail-section-title::before { content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%); width: 5px; height: 20px; background: #e50914; border-radius: 3px; }
     .detail-storyline { font-size: 14px; color: #aaa; line-height: 1.6; background: #111; padding: 15px; border-radius: 8px; }
-    .episode-card { flex: 0 0 160px; background-color: #181818; border-radius: 10px; overflow: hidden; cursor: pointer; transition: transform 0.2s ease-in-out; }
-    .episode-card:hover { transform: scale(1.05); }
-    .episode-thumbnail { position: relative; width: 100%; aspect-ratio: 16/9; }
-    .episode-thumbnail img { width: 100%; height: 100%; object-fit: cover; }
-    .play-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; font-size: 32px; color: white; opacity: 0; transition: opacity 0.3s; }
-    .episode-card:hover .play-overlay { opacity: 1; }
-    .episode-info { padding: 10px; }
-    .episode-title { font-size: 13px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    
     .cast-card { flex: 0 0 90px; text-align: center; }
     .cast-card img { width: 80px; height: 120px; border-radius: 8px; object-fit: cover; border: 2px solid #333; margin-bottom: 8px; }
     .cast-name { font-size: 12px; color: #ccc; line-height: 1.3; }
     .category-page-header { padding: 15px; }
     .category-page-title { font-size: 24px; font-weight: 700; }
     .content-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; padding: 0 15px 15px; }
-    .video-player { position: fixed; inset: 0; background: #000; z-index: 1000; display: none; }
-    .video-close { position: absolute; top: 15px; right: 15px; background: rgba(0,0,0,.7); color: #fff; border: none; width: 40px; height: 40px; border-radius: 50%; font-size: 20px; cursor: pointer; z-index: 1001; transition: .3s; }
-    .video-close:hover { background: rgba(229,9,20,.8); transform: scale(1.1); }
+    
     .back-btn { position: fixed; top: 15px; left: 15px; background: rgba(0,0,0,.7); color: #fff; border: none; width: 40px; height: 40px; border-radius: 50%; font-size: 18px; cursor: pointer; z-index: 101; display: none; transition: .3s; }
     .back-btn:hover { background: rgba(229,9,20,.8); transform: scale(1.1); }
     .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,.85); color: #fff; padding: 10px 20px; border-radius: 6px; font-size: 14px; z-index: 2000; opacity: 0; transition: opacity .3s, transform .3s; }
     .toast.show { opacity: 1; transform: translateX(-50%) translateY(-10px); }
-    .button { display: flex; justify-content: center; align-items: center; color: #fff; width: 80px; height: 80px; border-radius: 100%; background: linear-gradient(30deg, rgb(255, 0, 0) 20%, rgb(255, 0, 0) 80%); transition: all 0.3s ease-in-out 0s; box-shadow: rgba(255, 0, 0, 0.6) 0px 0px 0px 0px; animation: pulse 1.2s cubic-bezier(0.8, 0, 0, 1) 0s infinite normal none running; border: 0; cursor: pointer; }
-    .button:is(:hover, :focus) { transform: scale(1.2); }
-    @keyframes pulse { 100% { box-shadow: 0 0 0 45px rgba(255, 0, 0, 0); } }
-
+    
     #livetv-content-grid { grid-template-columns: repeat(4, 1fr); gap: 20px; }
     .livetv-channel-card {
-        aspect-ratio: 1 / 1;
-        background-color: #fff;
-        border-radius: 50%;
-        padding: 8px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
-        cursor: pointer;
-        transition: transform 0.2s ease;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        aspect-ratio: 1 / 1; background-color: #fff; border-radius: 50%; padding: 8px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+        cursor: pointer; transition: transform 0.2s ease; display: flex; align-items: center; justify-content: center;
     }
     .livetv-channel-card:hover { transform: scale(1.1); }
     .livetv-channel-card img { width: 100%; height: 100%; object-fit: contain; }
 
-    #livetv-player-container {
-        position: relative;
-        width: 100%;
-        padding-top: 56.25%; /* 16:9 Aspect Ratio */
-        background-color: #000;
+    .player-page-container { position: relative; width: 100%; padding-top: 56.25%; background-color: #000; }
+    .player-page-iframe, .player-page-video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+    .current-item-info { display: flex; align-items: center; padding: 15px; background-color: #111; border-bottom: 1px solid #222; }
+    .current-item-logo { width: 60px; height: 60px; border-radius: 50%; margin-right: 15px; object-fit: contain; background-color: #fff; padding: 5px; flex-shrink: 0; }
+    .current-item-title { font-size: 20px; font-weight: 700; }
+    #other-channels-grid { grid-template-columns: repeat(4, 1fr); gap: 20px; padding: 15px; }
+
+    .episode-modal {
+        position: fixed; inset: 0; height: 100vh;
+        background-color: #181818;
+        z-index: 2100;
+        display: none;
+        flex-direction: column;
     }
-    #livetv-iframe-player {
-        position: absolute;
-        top: 0; left: 0;
-        width: 100%; height: 100%;
-        border: none;
+    .episode-modal-header { display: flex; justify-content: space-between; align-items: center; padding: 15px; background-color: #202020; flex-shrink: 0; }
+    .episode-modal-title { font-size: 20px; font-weight: 700; }
+    .episode-modal-close {
+        background: #e50914; border: none; color: #fff; font-size: 24px; cursor: pointer;
+        width: 30px; height: 30px; border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
     }
-    #current-channel-info {
-        display: flex;
-        align-items: center;
-        padding: 15px;
-        background-color: #111;
-        border-bottom: 1px solid #222;
+    .episode-modal-player-container { position: relative; width: 100%; padding-top: 56.25%; background-color: #000; display: none; flex-shrink: 0; }
+    .episode-modal-player-container .close-btn { position: absolute; top: 15px; right: 15px; z-index: 10; }
+    .episode-modal-player-container iframe, .episode-modal-player-container video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+    
+    .episode-modal-list-container { padding: 15px; flex: 1; overflow-y: auto; }
+    .season-title { color: #e50914; font-size: 18px; font-weight: 700; margin-bottom: 15px; }
+    .modal-episode-item {
+        display: flex; align-items: center; background-color: #282828;
+        border-radius: 8px; padding: 10px; margin-bottom: 10px; cursor: pointer; transition: background-color 0.2s;
     }
-    #current-channel-logo {
-        width: 60px; height: 60px;
-        border-radius: 50%;
-        margin-right: 15px;
-        object-fit: contain;
-        background-color: #fff;
-        padding: 5px;
-        flex-shrink: 0;
+    .modal-episode-item.active { background-color: #e50914; }
+    .modal-episode-item:hover:not(.active) { background-color: #383838; }
+    .modal-episode-item img { width: 120px; height: 67.5px; object-fit: cover; border-radius: 5px; margin-right: 15px; }
+    .modal-episode-item-title { flex: 1; font-weight: 700; }
+    .modal-episode-item-play {
+        width: 40px; height: 40px; border-radius: 50%; background-color: #e50914; color: #fff;
+        display: flex; align-items: center; justify-content: center; font-size: 18px;
     }
-    #current-channel-title { font-size: 20px; font-weight: 700; }
-    #other-channels-grid {
-        grid-template-columns: repeat(4, 1fr);
-        gap: 20px;
-        padding: 15px;
-    }
+    .modal-episode-item.active .modal-episode-item-play { background-color: #fff; color: #e50914; }
   </style>
 </head>
 <body>
@@ -198,13 +190,7 @@
 
   <div class="loading-screen" id="loading-screen">
     <div class="loader">
-      <svg class="absolute" width="0" height="0">
-        <defs>
-          <linearGradient id="b" x1="0" y1="62" x2="0" y2="2" gradientUnits="userSpaceOnUse"><stop stop-color="#973BED"></stop><stop offset="1" stop-color="#007CFF"></stop></linearGradient>
-          <linearGradient id="c" x1="0" y1="64" x2="0" y2="0" gradientUnits="userSpaceOnUse"><stop stop-color="#FFC800"></stop><stop offset="1" stop-color="#F0F"></stop><animateTransform attributeName="gradientTransform" type="rotate" values="0 32 32;-270 32 32;-540 32 32;-810 32 32;-1080 32 32" dur="8s" keyTimes="0;0.125;0.25;0.375;0.5;0.625;0.75;0.875;1" repeatCount="indefinite"></animateTransform></linearGradient>
-          <linearGradient id="d" x1="0" y1="62" x2="0" y2="2" gradientUnits="userSpaceOnUse"><stop stop-color="#00E0ED"></stop><stop offset="1" stop-color="#00DA72"></stop></linearGradient>
-        </defs>
-      </svg>
+      <svg class="absolute" width="0" height="0"><defs><linearGradient id="b" x1="0" y1="62" x2="0" y2="2" gradientUnits="userSpaceOnUse"><stop stop-color="#973BED"></stop><stop offset="1" stop-color="#007CFF"></stop></linearGradient><linearGradient id="c" x1="0" y1="64" x2="0" y2="0" gradientUnits="userSpaceOnUse"><stop stop-color="#FFC800"></stop><stop offset="1" stop-color="#F0F"></stop><animateTransform attributeName="gradientTransform" type="rotate" values="0 32 32;-270 32 32;-540 32 32;-810 32 32;-1080 32 32" dur="8s" keyTimes="0;0.125;0.25;0.375;0.5;0.625;0.75;0.875;1" repeatCount="indefinite"></animateTransform></linearGradient><linearGradient id="d" x1="0" y1="62" x2="0" y2="2" gradientUnits="userSpaceOnUse"><stop stop-color="#00E0ED"></stop><stop offset="1" stop-color="#00DA72"></stop></linearGradient></defs></svg>
       <svg viewBox="0 0 44 54" fill="none" xmlns="http://www.w3.org/2000/svg"><path pathLength="360" d="M10 5 H30 V15 H15 V25 H25 V35 H15 V50" class="dash gradient-b" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
       <svg viewBox="0 0 44 54" fill="none" xmlns="http://www.w3.org/2000/svg"><path pathLength="360" d="M10 5 V45 H30" class="dash gradient-c" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
       <svg viewBox="0 0 44 54" fill="none" xmlns="http://www.w3.org/2000/svg"><path pathLength="360" d="M22 5 V45" class="dash gradient-d" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
@@ -216,7 +202,6 @@
       <svg viewBox="0 0 44 54" fill="none" xmlns="http://www.w3.org/2000/svg"><path pathLength="360" d="M10 5 V45 H20 Q30 45 30 25 Q30 5 20 5 H10" class="dash gradient-d" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
       <div class="w-2"></div>
     </div>
-    <div class="loading-text" id="loading-text">Loading...</div>
   </div>
 
   <button class="back-btn" id="back-btn" onclick="goBack()"><i class="fas fa-arrow-left"></i></button>
@@ -251,16 +236,8 @@
         <div class="detail-meta" id="detail-meta"></div>
       </div>
     </div>
-    <div class="detail-actions">
-        <button class="button" id="play-btn" onclick="playContent()">
-            <svg viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" width="26px"><path d="M424.4 214.7L72.4 6.6C43.8-10.3 0 6.1 0 47.9V464c0 37.5 40.7 60.1 72.4 41.3l352-208c31.4-18.5 31.5-64.1 0-82.6z" fill="currentColor"></path></svg>
-        </button>
-    </div>
+    <div class="detail-actions" id="detail-actions"></div>
     <div class="detail-bottom-content">
-      <div class="detail-section" id="episodes-section" style="display:none;">
-        <h3 class="detail-section-title">Episodes</h3>
-        <div class="content-slider" id="episodes-list"></div>
-      </div>
       <div class="detail-section">
         <h3 class="detail-section-title">Storyline</h3>
         <p class="detail-storyline" id="detail-storyline"></p>
@@ -292,23 +269,30 @@
   </div>
   
   <div id="livetv-player-page" class="page">
-      <div id="livetv-player-container">
-          <iframe id="livetv-iframe-player" allowfullscreen></iframe>
+      <div class="player-page-container">
+          <iframe id="livetv-iframe-player" class="player-page-iframe" allowfullscreen></iframe>
       </div>
-      <div id="current-channel-info">
-          <img id="current-channel-logo" src="">
-          <h2 id="current-channel-title"></h2>
+      <div class="current-item-info">
+          <img id="current-channel-logo" class="current-item-logo" src="">
+          <h2 id="current-channel-title" class="current-item-title"></h2>
       </div>
       <div class="detail-section">
           <h3 class="detail-section-title" style="padding-left:15px">More Channels</h3>
           <div id="other-channels-grid" class="content-grid"></div>
       </div>
   </div>
-
-  <div class="video-player" id="video-player">
-    <button class="video-close" onclick="closeVideoPlayer()"><i class="fas fa-times"></i></button>
-    <iframe id="iframe-player" style="width:100%;height:100%;border:none;display:none;" allowfullscreen></iframe>
-    <video id="native-player" style="width:100%;height:100%;display:none;" controls autoplay></video>
+  
+  <div id="episode-modal" class="episode-modal">
+    <div id="episode-modal-header" class="episode-modal-header">
+        <h2 id="episode-modal-title" class="episode-modal-title"></h2>
+        <button class="episode-modal-close" onclick="closeEpisodeModal()">&times;</button>
+    </div>
+    <div id="episode-modal-player-container" class="episode-modal-player-container">
+        <button class="episode-modal-close close-btn" onclick="closeEpisodeModal()">&times;</button>
+        <iframe id="episode-modal-iframe-player" style="display:none;" allowfullscreen></iframe>
+        <video id="episode-modal-native-player" style="display:none;" controls autoplay></video>
+    </div>
+    <div id="episode-modal-list-container" class="episode-modal-list-container"></div>
   </div>
 
   <div id="toast" class="toast"></div>
@@ -347,7 +331,7 @@
             if (Object.values(dataLoaded).every(status => status === true)) {
                 initialLoadComplete = true;
                 document.getElementById('loading-screen').style.display = 'none';
-                show_9731188().then(() => { alert('Welcome!'); });
+                show_9731188().then(() => { console.log('Ad SDK loaded'); });
             }
         }
 
@@ -446,8 +430,7 @@
       if (pageHistory.length > 1) {
         const currentPage = pageHistory.pop();
         if(currentPage === 'livetv-player-page') {
-            const player = document.getElementById('livetv-iframe-player');
-            player.src = 'about:blank';
+            document.getElementById('livetv-iframe-player').src = 'about:blank';
         }
         const previousPage = pageHistory[pageHistory.length - 1];
         showPage(previousPage);
@@ -456,36 +439,35 @@
 
     function showDetailPage(item) {
         currentContent = item;
-        if (sliderInterval) clearInterval(sliderInterval);
-        document.getElementById('detail-backdrop').innerHTML = `<img src="${item.backdrop}" alt="" onerror="this.style.display='none'">`;
+        document.getElementById('detail-backdrop').innerHTML = `<img src="${item.backdrop || item.poster}" alt="" onerror="this.style.display='none'">`;
         document.getElementById('detail-poster').innerHTML = `<img src="${item.poster}" alt="" onerror="this.style.display='none'">`;
         document.getElementById('detail-title').textContent = item.title;
         document.getElementById('detail-meta').innerHTML = `<div class="meta-tag"><i class="fas fa-calendar"></i> ${item.year || 'N/A'}</div><div class="meta-tag"><i class="fas fa-star"></i> ${item.rating || 'N/A'}</div><div class="meta-tag"><i class="fas fa-language"></i> ${item.language || 'N/A'}</div>`;
         document.getElementById('detail-storyline').textContent = item.storyline || '';
+        
+        const actionsContainer = document.getElementById('detail-actions');
+        actionsContainer.innerHTML = '';
+        if (item.type === 'webseries' && item.episodes?.length > 0) {
+            actionsContainer.innerHTML = `<button class="btn primary" onclick="openEpisodeModal('${item.id}')"><i class="fas fa-list-ul"></i> Episodes</button>`;
+        } else if (item.type === 'movie') {
+            actionsContainer.innerHTML = `<button class="button" onclick="playMovie('${item.link}')">
+                <svg viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" width="26px"><path d="M424.4 214.7L72.4 6.6C43.8-10.3 0 6.1 0 47.9V464c0 37.5 40.7 60.1 72.4 41.3l352-208c31.4-18.5 31.5-64.1 0-82.6z" fill="currentColor"></path></svg>
+            </button>`;
+        }
+        
         const castSection = document.getElementById('cast-section');
-        const castSlider = document.getElementById('cast-slider');
         if (item.cast && item.cast.length > 0) {
-            castSlider.innerHTML = '';
-            item.cast.forEach(actor => castSlider.appendChild(createCastCard(actor)));
+            document.getElementById('cast-slider').innerHTML = '';
+            item.cast.forEach(actor => document.getElementById('cast-slider').appendChild(createCastCard(actor)));
             castSection.style.display = 'block';
         } else {
             castSection.style.display = 'none';
         }
-        const episodesSection = document.getElementById('episodes-section');
-        const episodesList = document.getElementById('episodes-list');
-        if (item.type === 'webseries' && item.episodes?.length > 0) {
-            episodesSection.style.display = 'block';
-            episodesList.innerHTML = '';
-            item.episodes.forEach(ep => {
-                episodesList.innerHTML += `<div class="episode-card" onclick="playEpisode('${ep.link}')"><div class="episode-thumbnail"><img src="${item.poster}" alt="Episode Thumbnail" onerror="this.src='https://i.imgur.com/Z2MY6Y1.png';"><div class="play-overlay"><i class="fas fa-play"></i></div></div><div class="episode-info"><div class="episode-title">S${ep.session} E${ep.number}</div></div></div>`;
-            });
-        } else {
-            episodesSection.style.display = 'none';
-        }
+        
         const similarSlider = document.getElementById('similar-slider');
         similarSlider.innerHTML = '';
-        const similarContent = allContent.filter(c => c.id !== item.id && c.category && item.category && c.category.trim().toLowerCase() === item.category.trim().toLowerCase()).slice(0, 10);
-        similarContent.forEach(content => similarSlider.appendChild(createContentCard(content)));
+        allContent.filter(c => c.id !== item.id && c.category === item.category).slice(0, 10).forEach(content => similarSlider.appendChild(createContentCard(content)));
+        
         showPage('detail-page');
     }
 
@@ -493,20 +475,15 @@
       document.getElementById('category-page-title').textContent = categoryName;
       const grid = document.getElementById('category-content-grid');
       grid.innerHTML = '';
-      const categoryContent = allContent.filter(item => item && item.category && typeof item.category === 'string' && item.category.trim().toLowerCase() === categoryName.trim().toLowerCase());
-      if (categoryContent.length > 0) {
-        categoryContent.forEach(item => grid.appendChild(createContentCard(item)));
-      }
+      allContent.filter(item => item.category === categoryName).forEach(item => grid.appendChild(createContentCard(item)));
       showPage('category-page');
     }
 
     function showLiveTVPage() {
         const grid = document.getElementById('livetv-content-grid');
         grid.innerHTML = '';
-        if (liveTVCache && liveTVCache.length > 0) {
-            liveTVCache.forEach(channel => {
-                grid.appendChild(createLiveTVGridCard(channel));
-            });
+        if (liveTVCache.length > 0) {
+            liveTVCache.forEach(channel => grid.appendChild(createLiveTVGridCard(channel)));
         }
         showPage('livetv-page');
     }
@@ -514,16 +491,13 @@
     function renderDynamicCategories() {
       const container = document.getElementById('categories-container');
       container.innerHTML = '';
-      const uniqueCategories = [...new Set(categories)];
-      uniqueCategories.forEach(categoryName => {
-        const categoryContent = allContent.filter(item => item && item.category && typeof item.category === 'string' && item.category.trim().toLowerCase() === categoryName.trim().toLowerCase());
+      [...new Set(categories)].forEach(categoryName => {
+        const categoryContent = allContent.filter(item => item.category === categoryName);
         if (categoryContent.length === 0) return;
         const section = document.createElement('div');
         section.className = 'category-section';
-        section.innerHTML = `<div class="category-header"><h2 class="category-title">${categoryName}</h2><a href="#" class="see-all">See All</a></div><div class="content-slider"></div>`;
-        const slider = section.querySelector('.content-slider');
-        categoryContent.slice(0, 10).forEach(item => slider.appendChild(createContentCard(item)));
-        section.querySelector('.see-all').onclick = (e) => { e.preventDefault(); showCategoryPage(categoryName); };
+        section.innerHTML = `<div class="category-header"><h2 class="category-title">${categoryName}</h2><a href="#" class="see-all" onclick="event.preventDefault(); showCategoryPage('${categoryName}');">See All</a></div><div class="content-slider"></div>`;
+        categoryContent.slice(0, 10).forEach(item => section.querySelector('.content-slider').appendChild(createContentCard(item)));
         container.appendChild(section);
       });
     }
@@ -532,22 +506,12 @@
       const slider = document.getElementById('slider'), indicators = document.getElementById('slider-indicators'), sliderContainer = document.querySelector('.slider-container');
       slider.innerHTML = ''; indicators.innerHTML = '';
       const sliderItems = allContent.filter(item => item.slider === 'on');
-      if (sliderItems.length === 0) {
-          sliderContainer.style.display = 'none';
-          if (sliderInterval) clearInterval(sliderInterval);
-          return;
-      }
+      if (sliderItems.length === 0) { sliderContainer.style.display = 'none'; if (sliderInterval) clearInterval(sliderInterval); return; }
       sliderContainer.style.display = 'block';
       sliderItems.forEach((item, index) => {
-        const slide = document.createElement('div');
-        slide.className = 'slide';
-        slide.innerHTML = `<img src="${item.backdrop}" alt="" onerror="this.style.display='none'"><div class="slide-overlay"><div class="slide-title">${item.title}</div><div class="slide-meta"><span>${item.year || ''}</span><span class="slide-rating"><i class="fas fa-star"></i> ${item.rating || ''}</span></div></div>`;
-        slide.onclick = () => showDetailPage(item);
-        slider.appendChild(slide);
-        const indicator = document.createElement('div');
-        indicator.className = `indicator ${index === 0 ? 'active' : ''}`;
-        indicator.onclick = () => goToSlide(index);
-        indicators.appendChild(indicator);
+        const itemData = JSON.stringify(item).replace(/"/g, '&quot;');
+        slider.innerHTML += `<div class="slide" onclick='showDetailPage(${itemData})'><img src="${item.backdrop || item.poster}" alt=""><div class="slide-overlay"><div class="slide-title">${item.title}</div><div class="slide-meta"><span>${item.year || ''}</span><span class="slide-rating"><i class="fas fa-star"></i> ${item.rating || ''}</span></div></div></div>`;
+        indicators.innerHTML += `<div class="indicator ${index === 0 ? 'active' : ''}" onclick="goToSlide(${index})"></div>`;
       });
       startSlider();
     }
@@ -567,115 +531,122 @@
       }, 5000);
     }
 
-    // START: Updated Universal Video Player
-    function openVideoPlayer(url) {
-        if (!url) {
-            console.error("Video URL is invalid.");
-            showToast('Video link is not available.', 'error');
-            return;
-        }
+    function openUniversalPlayer(url, iframeTarget, videoTarget) {
+        const iframePlayer = document.getElementById(iframeTarget);
+        const nativePlayer = document.getElementById(videoTarget);
+        iframePlayer.style.display = 'none'; nativePlayer.style.display = 'none';
+        if (!url) return;
 
-        const playerContainer = document.getElementById('video-player');
-        const iframePlayer = document.getElementById('iframe-player');
-        const nativePlayer = document.getElementById('native-player');
+        const iframeDomains = ['livereacting.com', 'anym3u8player.com', 'hlsplayer.net', 'player.autoembed.cc', 'player.vidify.top'];
+        const directExt = ['.mkv', '.mp4', '.webm', '.mov', '.avi', '.flv', '.m3u8', '.ts'];
+        const directDomains = ['pixeldrain.dev', 'ftpbd.net', 'sarail.net', 'ydns.eu', 'discoveryftp.net'];
         
-        iframePlayer.style.display = 'none';
-        nativePlayer.style.display = 'none';
-
-        const iframePlayerDomains = ['livereacting.com', 'anym3u8player.com', 'hlsplayer.net', 'player.autoembed.cc', 'player.vidify.top'];
-        const directFileExtensions = ['.mkv', '.mp4', '.webm', '.mov', '.avi', '.flv', '.m3u8', '.ts'];
-        const directFileDomains = ['pixeldrain.dev', 'ftpbd.net', 'sarail.net', 'ydns.eu', 'discoveryftp.net'];
-        
-        let useNativePlayer = false;
-
+        let useNative = false;
         try {
-            const urlObject = new URL(url);
-            const hostname = urlObject.hostname.toLowerCase();
-            const pathname = urlObject.pathname.toLowerCase();
-
-            if (iframePlayerDomains.some(domain => hostname.includes(domain))) {
-                useNativePlayer = false;
-            } else if (directFileExtensions.some(ext => pathname.endsWith(ext))) {
-                useNativePlayer = true;
-            } else if (directFileDomains.some(domain => hostname.includes(domain))) {
-                useNativePlayer = true;
-            } else {
-                useNativePlayer = false;
-            }
+            const u = new URL(url);
+            if (iframeDomains.some(d => u.hostname.includes(d))) useNative = false;
+            else if (directExt.some(e => u.pathname.endsWith(e))) useNative = true;
+            else if (directDomains.some(d => u.hostname.includes(d))) useNative = true;
+            else useNative = false;
         } catch (e) {
-            const lowerUrl = url.toLowerCase();
-            useNativePlayer = directFileExtensions.some(ext => lowerUrl.endsWith(ext));
+            useNative = directExt.some(ext => url.toLowerCase().endsWith(ext));
         }
         
-        if (useNativePlayer) {
-            nativePlayer.src = url;
-            nativePlayer.style.display = 'block';
-            if(nativePlayer.paused) nativePlayer.play();
+        if (useNative) {
+            nativePlayer.src = url; nativePlayer.style.display = 'block'; nativePlayer.play();
         } else {
-            iframePlayer.src = url;
-            iframePlayer.style.display = 'block';
+            iframePlayer.src = url; iframePlayer.style.display = 'block';
         }
-
-        playerContainer.style.display = 'block';
     }
 
-    function closeVideoPlayer() {
-        const playerContainer = document.getElementById('video-player');
-        const iframePlayer = document.getElementById('iframe-player');
-        const nativePlayer = document.getElementById('native-player');
-        
-        playerContainer.style.display = 'none';
-        iframePlayer.src = 'about:blank';
-        
-        if (!nativePlayer.paused) {
-            nativePlayer.pause();
-        }
-        nativePlayer.src = '';
-        nativePlayer.removeAttribute('src');
-        try {
-          nativePlayer.load();
-        } catch(e) { /* Ignore error */ }
-    }
-    // END: Updated Universal Video Player
-
-    function playContent() {
-      show_9731188().then(() => {
-        if (!currentContent) return;
-        let videoUrl = (currentContent.type === 'movie') ? currentContent.link : currentContent.episodes?.[0]?.link;
-        if (videoUrl) openVideoPlayer(videoUrl);
-        else showToast('No content to play', 'error');
-      });
+    function playMovie(link) {
+        show_9731188().then(() => {
+            if (link) {
+                openEpisodeModal(null, true, link);
+            } else {
+                showToast('No content to play', 'error');
+            }
+        });
     }
 
-    function playEpisode(link) {
-      show_9731188().then(() => {
-        if (link) openVideoPlayer(link);
-        else showToast('Link is missing.', 'error');
-      });
-    }
-    
     function showLiveTVPlayerPage(channel) {
-        if (!channel || !channel.link) {
-            showToast('Channel link is missing!', 'error');
-            return;
-        }
-        
+        if (!channel || !channel.link) { showToast('Channel link is missing!', 'error'); return; }
         showPage('livetv-player-page');
-
-        const player = document.getElementById('livetv-iframe-player');
-        player.src = channel.link;
-
+        document.getElementById('livetv-iframe-player').src = channel.link;
         document.getElementById('current-channel-logo').src = channel.poster;
         document.getElementById('current-channel-title').textContent = channel.title;
-
         const grid = document.getElementById('other-channels-grid');
         grid.innerHTML = '';
-        const otherChannels = liveTVCache.filter(c => c.id !== channel.id);
-        otherChannels.forEach(otherChannel => {
-            grid.appendChild(createLiveTVGridCard(otherChannel));
-        });
-        
+        liveTVCache.filter(c => c.id !== channel.id).forEach(other => grid.appendChild(createLiveTVGridCard(other)));
         window.scrollTo(0, 0);
+    }
+    
+    function openEpisodeModal(seriesId, isMovie = false, movieLink = '') {
+        const modal = document.getElementById('episode-modal');
+        const listContainer = document.getElementById('episode-modal-list-container');
+        document.getElementById('episode-modal-header').style.display = 'flex';
+        document.getElementById('episode-modal-player-container').style.display = 'none';
+
+        if (isMovie) {
+            document.getElementById('episode-modal-title').textContent = currentContent.title;
+            listContainer.innerHTML = '';
+            playEpisodeInModal(null, null, movieLink);
+        } else {
+            const series = webseriesCache.find(s => s.id === seriesId);
+            if (!series || !series.episodes || series.episodes.length === 0) return;
+            document.getElementById('episode-modal-title').textContent = `${series.title} - Episodes`;
+            listContainer.innerHTML = `<div class="season-title">Season 1</div>`;
+            
+            series.episodes.forEach((ep, index) => {
+                const item = document.createElement('div');
+                item.className = 'modal-episode-item';
+                item.setAttribute('data-index', index);
+                item.innerHTML = `
+                    <img src="${series.poster}" alt="Thumb">
+                    <div class="modal-episode-item-title">Episode ${ep.number}</div>
+                    <div class="modal-episode-item-play"><i class="fas fa-play"></i></div>
+                `;
+                item.onclick = () => playEpisodeInModal(seriesId, index);
+                listContainer.appendChild(item);
+            });
+        }
+        modal.style.display = 'flex';
+    }
+
+    function closeEpisodeModal() {
+        const modal = document.getElementById('episode-modal');
+        modal.style.display = 'none';
+        document.getElementById('episode-modal-iframe-player').src = 'about:blank';
+        const nativePlayer = document.getElementById('episode-modal-native-player');
+        if (nativePlayer && !nativePlayer.paused) {
+            nativePlayer.pause();
+            nativePlayer.src = '';
+        }
+    }
+
+    function playEpisodeInModal(seriesId, episodeIndex, movieLink = '') {
+        let link, isSeries = seriesId !== null;
+        
+        if (isSeries) {
+            const series = webseriesCache.find(s => s.id === seriesId);
+            const episode = series.episodes[episodeIndex];
+            if (!episode || !episode.link) { showToast('This episode link is missing!', 'error'); return; }
+            link = episode.link;
+        } else {
+            link = movieLink;
+        }
+
+        show_9731188().then(() => {
+            document.getElementById('episode-modal-header').style.display = 'none';
+            document.getElementById('episode-modal-player-container').style.display = 'block';
+            
+            openUniversalPlayer(link, 'episode-modal-iframe-player', 'episode-modal-native-player');
+            
+            if (isSeries) {
+              document.querySelectorAll('.modal-episode-item').forEach(item => item.classList.remove('active'));
+              document.querySelector(`.modal-episode-item[data-index="${episodeIndex}"]`).classList.add('active');
+            }
+        });
     }
 
     function searchContent() {
@@ -683,11 +654,7 @@
       const mainContentContainer = document.getElementById('main-content-container');
       const searchContainer = document.getElementById('search-results-container');
       
-      if (!searchTerm) {
-        searchContainer.style.display = 'none'; 
-        mainContentContainer.style.display = 'block'; 
-        return;
-      }
+      if (!searchTerm) { searchContainer.style.display = 'none'; mainContentContainer.style.display = 'block'; return; }
 
       const filteredContent = allContent.filter(item => (item.title||'').toLowerCase().includes(searchTerm));
       searchContainer.innerHTML = '';
@@ -699,7 +666,7 @@
       if (filteredContent.length > 0) {
         filteredContent.forEach(item => grid.appendChild(createContentCard(item)));
       } else {
-        grid.innerHTML = `<p style="padding: 20px 15px; color: #aaa; grid-column: 1 / -1; text-align: center;">No results found for "${searchTerm}"</p>`;
+        grid.innerHTML = `<p style="padding: 20px 15px; grid-column: 1 / -1; text-align: center;">No results found.</p>`;
       }
       
       searchContainer.appendChild(section);
@@ -716,11 +683,7 @@
         document.getElementById('content-list-title').textContent = title;
         const grid = document.getElementById('content-list-grid');
         grid.innerHTML = '';
-        
-        let contentToShow = [];
-        if (type === 'movie') contentToShow = moviesCache;
-        else if (type === 'webseries') contentToShow = webseriesCache;
-
+        const contentToShow = (type === 'movie') ? moviesCache : webseriesCache;
         if (contentToShow.length > 0) {
             contentToShow.forEach(item => grid.appendChild(createContentCard(item)));
         }
@@ -730,20 +693,11 @@
     function renderSidebarMenu() {
         const container = document.getElementById('sidebar-nav-container');
         if (!container) return;
-        
         container.innerHTML = '';
-
         const mainMenuItems = ['live tv', 'movies', 'web series', 'home'];
-        
         const uniqueCategories = [...new Set(categories)];
-        const filteredCategories = uniqueCategories.filter(cat => 
-            !mainMenuItems.includes(cat.toLowerCase())
-        );
-        
-        let categoriesHTML = filteredCategories.map(cat => 
-            `<a href="#" onclick="showCategoryPage('${cat}'); toggleSidebar();">${cat}</a>`
-        ).join('');
-
+        const filteredCategories = uniqueCategories.filter(cat => !mainMenuItems.includes(cat.toLowerCase()));
+        let categoriesHTML = filteredCategories.map(cat => `<a href="#" onclick="showCategoryPage('${cat}'); toggleSidebar();">${cat}</a>`).join('');
         container.innerHTML = `
             <a href="#" onclick="showPage('home-page'); toggleSidebar();">Home</a>
             <a href="#" onclick="showContentListPage('movie', 'All Movies'); toggleSidebar();">Movies</a>
