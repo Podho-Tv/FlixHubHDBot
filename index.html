@@ -90,10 +90,11 @@
     .detail-page { padding-top: 0; }
     .detail-backdrop { width: 100%; height: 300px; position: relative; }
     .detail-backdrop img { width: 100%; height: 100%; object-fit: cover; }
-    .detail-backdrop::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, #000 20%, rgba(0,0,0,0.7) 60%, transparent 100%); }
+    .detail-backdrop::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, #000 20%, rgba(0,0,0,0.6) 60%, transparent 100%); }
     .detail-content { padding: 0 15px; display: flex; margin-top: -120px; position: relative; z-index: 10; align-items: flex-end; }
-    .detail-poster { width: 120px; height: 180px; border-radius: 10px; overflow: hidden; border: 2px solid rgba(255,255,255,0.2); margin-right: 15px; box-shadow: 0 10px 30px rgba(0,0,0,.5); flex-shrink: 0; transition: transform 0.3s, box-shadow 0.3s; }
+   .detail-poster { width: 120px; height: 180px; border-radius: 10px; overflow: hidden; border: 2px solid rgba(255,255,255,0.2); margin-right: 15px; box-shadow: 0 10px 30px rgba(0,0,0,.5); flex-shrink: 0; transition: transform 0.3s, box-shadow 0.3s; }
     .detail-poster:hover { transform: scale(1.05); box-shadow: 0 0 25px rgba(0, 124, 255, 0.5); }
+    .detail-poster img { width: 100%; height: 100%; object-fit: cover; }
     .detail-info { flex: 1; min-width: 0; }
     .detail-title { font-size: 26px; font-weight: 700; margin-bottom: 12px; line-height: 1.2; text-shadow: 0 2px 5px rgba(0,0,0,0.7); }
     .detail-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
@@ -120,8 +121,8 @@
     .category-page-title { font-size: 24px; font-weight: 700; }
     .content-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; padding: 0 15px 15px; }
     
-    .back-btn { position: fixed; top: 15px; left: 15px; background: rgba(0,0,0,.7); color: #fff; border: none; width: 40px; height: 40px; border-radius: 50%; font-size: 18px; cursor: pointer; z-index: 101; display: none; transition: .3s; }
-    .back-btn:hover { background: rgba(0, 124, 255, 0.8); transform: scale(1.1); }
+    .back-btn { position: fixed; top: 15px; left: 15px; background: rgba(0,0,0,0.1); color: #fff; border: none; width: 40px; height: 40px; border-radius: 50%; font-size: 18px; cursor: pointer; z-index: 101; display: none; transition: .3s; }
+    
     .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,.85); color: #fff; padding: 10px 20px; border-radius: 6px; font-size: 14px; z-index: 2000; opacity: 0; transition: opacity .3s, transform .3s; }
     .toast.show { opacity: 1; transform: translateX(-50%) translateY(-10px); }
     
@@ -135,7 +136,10 @@
     .livetv-channel-card:hover { transform: scale(1.1); }
     .livetv-channel-card img { width: 100%; height: 100%; object-fit: contain; }
 
-    .player-page-container { position: relative; width: 100%; padding-top: 56.25%; background-color: #000; }
+    .player-page-container { 
+        position: sticky; top: 0; z-index: 10;
+        width: 100%; padding-top: 56.25%; background-color: #000;
+    }
     .player-page-iframe, .player-page-video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
     .current-item-info { display: flex; align-items: center; padding: 15px; background-color: #111; border-bottom: 1px solid #222; }
     .current-item-logo { width: 60px; height: 60px; border-radius: 50%; margin-right: 15px; object-fit: contain; background-color: #fff; padding: 5px; flex-shrink: 0; }
@@ -160,7 +164,7 @@
         display: flex; align-items: center; background-color: #282828;
         border-radius: 8px; padding: 10px; margin-bottom: 10px; cursor: pointer; transition: background-color 0.2s;
     }
-    .modal-episode-item.active { background-color: rgba(0, 124, 255, 0.2); } /* Updated Opacity */
+    .modal-episode-item.active { background-color: rgba(0, 124, 255, 0.2); }
     .modal-episode-item:hover:not(.active) { background-color: #383838; }
     .modal-episode-item img { width: 120px; height: 67.5px; object-fit: cover; border-radius: 5px; margin-right: 15px; }
     .modal-episode-item-title { flex: 1; font-weight: 700; }
@@ -169,13 +173,22 @@
         display: flex; align-items: center; justify-content: center; font-size: 18px;
     }
     .modal-episode-item.active .modal-episode-item-play { background-color: #fff; color: #007CFF; }
+    
+    .player-back-btn {
+        position: absolute; top: 15px; left: 15px; z-index: 1001;
+        background: rgba(0,0,0,0.0); color: #fff; border: none;
+        width: 40px; height: 40px; border-radius: 50%;
+        font-size: 18px; display: flex; align-items: center; justify-content: center;
+        cursor: pointer; transition: background-color .3s;
+    }
+    .player-back-btn:hover { background: rgba(0, 124, 255, 0.8); }
   </style>
 </head>
 <body>
   <div id="sidebar-overlay" class="overlay" onclick="toggleSidebar()"></div>
   <div id="sidebar-menu" class="sidebar">
     <div class="sidebar-header">
-      <a href="#" class="sidebar-logo" onclick="showPage('home-page'); toggleSidebar();">Flix Hub HD</a>
+      <a href="#" class="sidebar-logo" onclick="event.preventDefault(); showPage('home-page'); toggleSidebar();">Flix Hub HD</a>
     </div>
     <div id="sidebar-nav-container" class="sidebar-nav">
     </div>
@@ -195,10 +208,10 @@
       <svg viewBox="0 0 44 54" fill="none" xmlns="http://www.w3.org/2000/svg"><path pathLength="360" d="M10 5 V45 H20 Q30 45 30 25 Q30 5 20 5 H10" class="dash gradient-d" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
       <div class="w-2"></div>
     </div>
-    <div class="loading-text" id="loading-text">Loading...</div>
+    
   </div>
 
-  <button class="back-btn" id="back-btn" onclick="goBack()"><i class="fas fa-arrow-left"></i></button>
+  <button class="back-btn" id="back-btn" onclick="history.back()"><i class="fas fa-arrow-left"></i></button>
 
   <div id="home-page" class="page active">
     <div class="header">
@@ -258,12 +271,13 @@
   </div>
 
   <div id="livetv-page" class="page">
-    <div class="category-page-header"><h1 class="category-page-title">Live TV Channels</h1></div>
+    <div class="category-page-header"><h1 class="category-page-title">    Live TV</h1></div>
     <div id="livetv-content-grid" class="content-grid"></div>
   </div>
   
   <div id="livetv-player-page" class="page">
       <div class="player-page-container">
+          <button class="player-back-btn" onclick="history.back()"><i class="fas fa-arrow-left"></i></button>
           <iframe id="livetv-iframe-player" class="player-page-iframe" allowfullscreen></iframe>
       </div>
       <div class="current-item-info">
@@ -281,6 +295,7 @@
         <h2 id="episode-modal-title" class="episode-modal-title"></h2>
     </div>
     <div id="episode-modal-player-container" class="episode-modal-player-container">
+        <button class="player-back-btn" onclick="history.back()"><i class="fas fa-arrow-left"></i></button>
         <iframe id="episode-modal-iframe-player" style="display:none;" allowfullscreen></iframe>
         <video id="episode-modal-native-player" style="display:none;" controls autoplay></video>
     </div>
@@ -288,6 +303,7 @@
   </div>
 
   <div class="video-player" id="video-player">
+    <button class="player-back-btn" onclick="history.back()"><i class="fas fa-arrow-left"></i></button>
     <iframe id="iframe-player" style="width:100%;height:100%;border:none;display:none;" allowfullscreen></iframe>
     <video id="native-player" style="width:100%;height:100%;display:none;" controls autoplay></video>
   </div>
@@ -309,7 +325,7 @@
     firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
 
-    let allContent = [], categories = [], currentContent = null, sliderInterval = null, currentSlide = 0, pageHistory = ['home-page'];
+    let allContent = [], categories = [], currentContent = null, sliderInterval = null, currentSlide = 0;
     let moviesCache = [], webseriesCache = [], liveTVCache = [];
     
     function debounce(fn, wait = 300) { let t; return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), wait); }; }
@@ -317,15 +333,23 @@
 
     document.addEventListener('DOMContentLoaded', () => {
         attachRealtimeListeners();
-        window.addEventListener('popstate', function(event) {
-            if (document.getElementById('video-player').style.display === 'block') {
-                closeVideoPlayer();
-            }
-            if (document.getElementById('episode-modal').style.display === 'flex') {
-                closeEpisodeModal();
-            }
-        });
+        window.addEventListener('popstate', handlePopState);
+        history.replaceState({ page: 'home-page' }, 'Home');
     });
+
+    function handlePopState(event) {
+        if (document.getElementById('video-player').style.display === 'block') {
+            closeVideoPlayer(true);
+        } else if (document.getElementById('episode-modal').style.display === 'flex') {
+            closeEpisodeModal(true);
+        } else if (document.getElementById('livetv-player-page').classList.contains('active')) {
+             document.getElementById('livetv-iframe-player').src = 'about:blank';
+             showPage('livetv-page', true);
+        } else {
+            const state = event.state || { page: 'home-page' };
+            showPage(state.page, true);
+        }
+    }
 
     function attachRealtimeListeners() {
         let dataLoaded = { movies: false, series: false, tv: false, categories: false };
@@ -336,7 +360,9 @@
             if (Object.values(dataLoaded).every(status => status === true)) {
                 initialLoadComplete = true;
                 document.getElementById('loading-screen').style.display = 'none';
-                show_9731188().then(() => { console.log('Ad SDK loaded'); });
+                if (typeof show_9731188 === 'function') {
+                    show_9731188().then(() => { console.log('Ad SDK loaded'); });
+                }
             }
         }
 
@@ -397,7 +423,7 @@
       const card = document.createElement('div');
       card.className = 'content-card';
       const typeBadge = item.type === 'webseries' ? 'WEB' : 'MOVIE';
-      card.innerHTML = `<img src="${item.poster}" alt="${item.title}" onerror="this.parentElement.style.display='none'"><div class="content-card-overlay"><span class="content-badge">${typeBadge}</span></div><div class="content-title">${item.title}</div>`;
+      card.innerHTML = `<img src="${item.poster}" alt="${item.title}" onerror="this.src='https://i.imgur.com/Z2MY6Y1.png'"><div class="content-card-overlay"><span class="content-badge">${typeBadge}</span></div><div class="content-title">${item.title}</div>`;
       card.onclick = () => showDetailPage(item);
       return card;
     }
@@ -413,39 +439,34 @@
     function createLiveTVGridCard(channel) {
         const card = document.createElement('div');
         card.className = 'livetv-channel-card';
-        card.innerHTML = `<img src="${channel.poster}" alt="${channel.title}" onerror="this.parentElement.style.display='none'">`;
+        card.innerHTML = `<img src="${channel.poster}" alt="${channel.title}" onerror="this.src='https://i.imgur.com/Z2MY6Y1.png'">`;
         card.onclick = () => showLiveTVPlayerPage(channel);
         return card;
     }
 
-    function showPage(pageId) {
-      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-      document.getElementById(pageId).classList.add('active');
-      const isHomePage = pageId === 'home-page';
-      document.getElementById('back-btn').style.display = isHomePage ? 'none' : 'block';
-      if (!isHomePage && pageHistory[pageHistory.length - 1] !== pageId) {
-        pageHistory.push(pageId);
-      } else if (isHomePage) {
-        pageHistory = ['home-page'];
-      }
-      window.scrollTo(0, 0);
-    }
-
-    function goBack() {
-      if (pageHistory.length > 1) {
-        const currentPage = pageHistory.pop();
-        if(currentPage === 'livetv-player-page') {
-            document.getElementById('livetv-iframe-player').src = 'about:blank';
+    function showPage(pageId, fromPopState = false) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        const targetPage = document.getElementById(pageId);
+        if (targetPage) {
+            targetPage.classList.add('active');
+        } else {
+            document.getElementById('home-page').classList.add('active');
+            pageId = 'home-page';
         }
-        const previousPage = pageHistory[pageHistory.length - 1];
-        showPage(previousPage);
-      }
-    }
 
+        const isHomePage = pageId === 'home-page';
+        document.getElementById('back-btn').style.display = isHomePage ? 'none' : 'block';
+
+        if (!fromPopState && (!history.state || history.state.page !== pageId)) {
+            history.pushState({ page: pageId }, pageId);
+        }
+        window.scrollTo(0, 0);
+    }
+    
     function showDetailPage(item) {
         currentContent = item;
-        document.getElementById('detail-backdrop').innerHTML = `<img src="${item.backdrop || item.poster}" alt="" onerror="this.style.display='none'">`;
-        document.getElementById('detail-poster').innerHTML = `<img src="${item.poster}" alt="" onerror="this.style.display='none'">`;
+        document.getElementById('detail-backdrop').innerHTML = `<img src="${item.backdrop || item.poster}" alt="" onerror="this.onerror=null; this.src='https://i.imgur.com/Z2MY6Y1.png';">`;
+        document.getElementById('detail-poster').innerHTML = `<img src="${item.poster}" alt="" onerror="this.onerror=null; this.src='https://i.imgur.com/Z2MY6Y1.png';">`;
         document.getElementById('detail-title').textContent = item.title;
         document.getElementById('detail-meta').innerHTML = `<div class="meta-tag"><i class="fas fa-calendar"></i> ${item.year || 'N/A'}</div><div class="meta-tag"><i class="fas fa-star"></i> ${item.rating || 'N/A'}</div><div class="meta-tag"><i class="fas fa-language"></i> ${item.language || 'N/A'}</div>`;
         document.getElementById('detail-storyline').textContent = item.storyline || '';
@@ -477,20 +498,20 @@
     }
 
     function showCategoryPage(categoryName) {
+      showPage('category-page');
       document.getElementById('category-page-title').textContent = categoryName;
       const grid = document.getElementById('category-content-grid');
       grid.innerHTML = '';
       allContent.filter(item => item.category === categoryName).forEach(item => grid.appendChild(createContentCard(item)));
-      showPage('category-page');
     }
 
     function showLiveTVPage() {
+        showPage('livetv-page');
         const grid = document.getElementById('livetv-content-grid');
         grid.innerHTML = '';
         if (liveTVCache.length > 0) {
             liveTVCache.forEach(channel => grid.appendChild(createLiveTVGridCard(channel)));
         }
-        showPage('livetv-page');
     }
     
     function renderDynamicCategories() {
@@ -508,17 +529,32 @@
     }
 
     function updateSlider() {
-      const slider = document.getElementById('slider'), indicators = document.getElementById('slider-indicators'), sliderContainer = document.querySelector('.slider-container');
-      slider.innerHTML = ''; indicators.innerHTML = '';
-      const sliderItems = allContent.filter(item => item.slider === 'on');
-      if (sliderItems.length === 0) { sliderContainer.style.display = 'none'; if (sliderInterval) clearInterval(sliderInterval); return; }
-      sliderContainer.style.display = 'block';
-      sliderItems.forEach((item, index) => {
-        const itemData = JSON.stringify(item).replace(/"/g, '&quot;');
-        slider.innerHTML += `<div class="slide" onclick='showDetailPage(${itemData})'><img src="${item.backdrop || item.poster}" alt=""><div class="slide-overlay"><div class="slide-title">${item.title}</div><div class="slide-meta"><span>${item.year || ''}</span><span class="slide-rating"><i class="fas fa-star"></i> ${item.rating || ''}</span></div></div></div>`;
-        indicators.innerHTML += `<div class="indicator ${index === 0 ? 'active' : ''}" onclick="goToSlide(${index})"></div>`;
-      });
-      startSlider();
+        const slider = document.getElementById('slider');
+        const indicators = document.getElementById('slider-indicators');
+        const sliderContainer = document.querySelector('.slider-container');
+        slider.innerHTML = '';
+        indicators.innerHTML = '';
+        const sliderItems = allContent.filter(item => item.slider === 'on');
+        if (sliderItems.length === 0) {
+            sliderContainer.style.display = 'none';
+            if (sliderInterval) clearInterval(sliderInterval);
+            return;
+        }
+        sliderContainer.style.display = 'block';
+
+        sliderItems.forEach((item, index) => {
+            const slide = document.createElement('div');
+            slide.className = 'slide';
+            slide.innerHTML = `<img src="${item.backdrop || item.poster}" alt="" onerror="this.onerror=null; this.src='https://i.imgur.com/Z2MY6Y1.png';"><div class="slide-overlay"><div class="slide-title">${item.title}</div><div class="slide-meta"><span>${item.year || ''}</span><span class="slide-rating"><i class="fas fa-star"></i> ${item.rating || ''}</span></div></div>`;
+            slide.onclick = () => showDetailPage(item);
+            slider.appendChild(slide);
+
+            const indicator = document.createElement('div');
+            indicator.className = `indicator ${index === 0 ? 'active' : ''}`;
+            indicator.onclick = () => goToSlide(index);
+            indicators.appendChild(indicator);
+        });
+        startSlider();
     }
 
     function goToSlide(index) {
@@ -534,6 +570,20 @@
         currentSlide = (currentSlide + 1) % slides.length;
         goToSlide(currentSlide);
       }, 5000);
+    }
+
+    function triggerAdAndPlay(callback) {
+        if (typeof show_9731188 === 'function') {
+            show_9731188().then(() => {
+                if (typeof callback === 'function') callback();
+            }).catch(err => {
+                console.error("Ad SDK error:", err);
+                if (typeof callback === 'function') callback();
+            });
+        } else {
+            console.log("Ad SDK not available. Playing content directly.");
+            if (typeof callback === 'function') callback();
+        }
     }
 
     function openUniversalPlayer(url, iframeTargetId, videoTargetId) {
@@ -571,7 +621,7 @@
         openUniversalPlayer(url, 'iframe-player', 'native-player');
     }
 
-    function closeVideoPlayer() {
+    function closeVideoPlayer(fromPopState = false) {
         const playerContainer = document.getElementById('video-player');
         if (playerContainer.style.display === 'none') return;
         playerContainer.style.display = 'none';
@@ -582,7 +632,7 @@
     }
     
     function playMovie(link) {
-        show_9731188().then(() => {
+        triggerAdAndPlay(() => {
             if (link) {
                 openVideoPlayer(link);
             } else {
@@ -592,15 +642,16 @@
     }
 
     function showLiveTVPlayerPage(channel) {
-        if (!channel || !channel.link) { showToast('Channel link is missing!', 'error'); return; }
-        showPage('livetv-player-page');
-        document.getElementById('livetv-iframe-player').src = channel.link;
-        document.getElementById('current-channel-logo').src = channel.poster;
-        document.getElementById('current-channel-title').textContent = channel.title;
-        const grid = document.getElementById('other-channels-grid');
-        grid.innerHTML = '';
-        liveTVCache.filter(c => c.id !== channel.id).forEach(other => grid.appendChild(createLiveTVGridCard(other)));
-        window.scrollTo(0, 0);
+        triggerAdAndPlay(() => {
+            if (!channel || !channel.link) { showToast('Channel link is missing!', 'error'); return; }
+            showPage('livetv-player-page');
+            document.getElementById('livetv-iframe-player').src = channel.link;
+            document.getElementById('current-channel-logo').src = channel.poster;
+            document.getElementById('current-channel-title').textContent = channel.title;
+            const grid = document.getElementById('other-channels-grid');
+            grid.innerHTML = '';
+            liveTVCache.filter(c => c.id !== channel.id).forEach(other => grid.appendChild(createLiveTVGridCard(other)));
+        });
     }
     
     function openEpisodeModal(seriesId) {
@@ -631,7 +682,7 @@
         document.getElementById('episode-modal').style.display = 'flex';
     }
 
-    function closeEpisodeModal() {
+    function closeEpisodeModal(fromPopState = false) {
         const modal = document.getElementById('episode-modal');
         if (modal.style.display === 'none') return;
         modal.style.display = 'none';
@@ -648,7 +699,7 @@
         const episode = series.episodes[episodeIndex];
         if (!episode || !episode.link) { showToast('This episode link is missing!', 'error'); return; }
 
-        show_9731188().then(() => {
+        triggerAdAndPlay(() => {
             document.getElementById('episode-modal-header').style.display = 'none';
             document.getElementById('episode-modal-player-container').style.display = 'block';
             
@@ -690,6 +741,7 @@
     }
 
     function showContentListPage(type, title) {
+        showPage('content-list-page');
         document.getElementById('content-list-title').textContent = title;
         const grid = document.getElementById('content-list-grid');
         grid.innerHTML = '';
@@ -697,7 +749,6 @@
         if (contentToShow.length > 0) {
             contentToShow.forEach(item => grid.appendChild(createContentCard(item)));
         }
-        showPage('content-list-page');
     }
 
     function renderSidebarMenu() {
@@ -707,12 +758,12 @@
         const mainMenuItems = ['live tv', 'movies', 'web series', 'home'];
         const uniqueCategories = [...new Set(categories)];
         const filteredCategories = uniqueCategories.filter(cat => !mainMenuItems.includes(cat.toLowerCase()));
-        let categoriesHTML = filteredCategories.map(cat => `<a href="#" onclick="showCategoryPage('${cat}'); toggleSidebar();">${cat}</a>`).join('');
+        let categoriesHTML = filteredCategories.map(cat => `<a href="#" onclick="event.preventDefault(); showCategoryPage('${cat}'); toggleSidebar();">${cat}</a>`).join('');
         container.innerHTML = `
-            <a href="#" onclick="showPage('home-page'); toggleSidebar();">Home</a>
-            <a href="#" onclick="showContentListPage('movie', 'All Movies'); toggleSidebar();">Movies</a>
-            <a href="#" onclick="showContentListPage('webseries', 'All Series'); toggleSidebar();">Web Series</a>
-            <a href="#" onclick="showLiveTVPage(); toggleSidebar();">Live TV</a>
+            <a href="#" onclick="event.preventDefault(); showPage('home-page'); toggleSidebar();">Home</a>
+            <a href="#" onclick="event.preventDefault(); showContentListPage('movie', 'All Movies'); toggleSidebar();">Movies</a>
+            <a href="#" onclick="event.preventDefault(); showContentListPage('webseries', 'All Series'); toggleSidebar();">Web Series</a>
+            <a href="#" onclick="event.preventDefault(); showLiveTVPage(); toggleSidebar();">Live TV</a>
             <h3>Categories</h3>
             ${categoriesHTML}
         `;
