@@ -394,6 +394,7 @@
             liveTVCache = [];
             if (snap.exists()) {
                 snap.forEach(s => { liveTVCache.push({ id: s.key, ...s.val() }); });
+                liveTVCache.sort((a,b) => (a.serial || 999) - (b.serial || 999));
             }
             if (!dataLoaded.tv) { dataLoaded.tv = true; checkInitialLoad(); }
             showToast('Live TV updated');
