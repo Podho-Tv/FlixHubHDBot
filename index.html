@@ -297,7 +297,7 @@
     <div id="episode-modal-player-container" class="episode-modal-player-container">
         <button class="player-back-btn" onclick="history.back()"><i class="fas fa-arrow-left"></i></button>
         <iframe id="episode-modal-iframe-player" style="display:none;" allowfullscreen></iframe>
-        <video id="episode-modal-native-player" style="display:none;" controls autoplay></video>
+        <video id="episode-modal-native-player" style="display:none;" controls controlslist="nodownload" autoplay></video>
     </div>
     <div id="episode-modal-list-container" class="episode-modal-list-container"></div>
   </div>
@@ -305,7 +305,7 @@
   <div class="video-player" id="video-player">
     <button class="player-back-btn" onclick="history.back()"><i class="fas fa-arrow-left"></i></button>
     <iframe id="iframe-player" style="width:100%;height:100%;border:none;display:none;" allowfullscreen></iframe>
-    <video id="native-player" style="width:100%;height:100%;display:none;" controls autoplay></video>
+    <video id="native-player" style="width:100%;height:100%;display:none;" controls controlslist="nodownload" autoplay></video>
   </div>
 
   <div id="toast" class="toast"></div>
@@ -586,34 +586,51 @@
             if (typeof callback === 'function') callback();
         }
     }
-
+    
+    // START: Updated Universal Player Function
     function openUniversalPlayer(url, iframeTargetId, videoTargetId) {
         const iframePlayer = document.getElementById(iframeTargetId);
         const nativePlayer = document.getElementById(videoTargetId);
-        iframePlayer.style.display = 'none'; nativePlayer.style.display = 'none';
+        iframePlayer.style.display = 'none';
+        nativePlayer.style.display = 'none';
         if (!url) return;
 
-        const iframeDomains = ['livereacting.com', 'anym3u8player.com', 'hlsplayer.net', 'player.autoembed.cc', 'player.vidify.top'];
+        const iframeDomains = ['livereacting.com', 'anym3u8player.com', 'hlsplayer.net', 'player.autoembed.cc', 'player.vidify.top', 'podho-tv.vercel.app'];
         const directExt = ['.mkv', '.mp4', '.webm', '.mov', '.avi', '.flv', '.m3u8', '.ts'];
-        const directDomains = ['pixeldrain.dev', 'ftpbd.net', 'sarail.net', 'ydns.eu', 'discoveryftp.net'];
+        const directDomains = ['pixeldrain.dev', 'ftpbd.net', 'sarail.net', 'ydns.eu', 'discoveryftp.net', 'slivcdn.com', 'amagi.tv'];
         
         let useNative = false;
         try {
             const u = new URL(url);
-            if (iframeDomains.some(d => u.hostname.includes(d))) useNative = false;
-            else if (directExt.some(e => u.pathname.endsWith(e))) useNative = true;
-            else if (directDomains.some(d => u.hostname.includes(d))) useNative = true;
-            else useNative = false;
+            const hostname = u.hostname.toLowerCase();
+            const pathname = u.pathname.toLowerCase();
+            
+            if (iframeDomains.some(d => hostname.includes(d))) {
+                useNative = false;
+            } else if (directExt.some(e => pathname.endsWith(e))) {
+                useNative = true;
+            } else if (directDomains.some(d => hostname.includes(d))) {
+                useNative = true;
+            } else {
+                // Default to iframe for unknown types, as it's safer
+                useNative = false;
+            }
         } catch (e) {
-            useNative = directExt.some(ext => url.toLowerCase().endsWith(ext));
+            // Fallback for URLs that can't be parsed (e.g., relative paths, though unlikely here)
+            const lowerUrl = url.toLowerCase();
+            useNative = directExt.some(ext => lowerUrl.endsWith(ext));
         }
         
         if (useNative) {
-            nativePlayer.src = url; nativePlayer.style.display = 'block'; nativePlayer.play();
+            nativePlayer.src = url;
+            nativePlayer.style.display = 'block';
+            nativePlayer.play();
         } else {
-            iframePlayer.src = url; iframePlayer.style.display = 'block';
+            iframePlayer.src = url;
+            iframePlayer.style.display = 'block';
         }
     }
+    // END: Updated Universal Player Function
     
     function openVideoPlayer(url) {
         const playerContainer = document.getElementById('video-player');
