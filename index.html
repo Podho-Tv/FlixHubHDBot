@@ -9,14 +9,24 @@
   <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
 
-  <!-- Icons / Ad SDK -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <!-- Bootstrap Icons (Modern & Premium Look) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   
   <script src='//libtl.com/sdk.js' data-zone='9731188' data-sdk='show_9731188'></script>
 
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Netflix Sans','Helvetica Neue',Helvetica,Arial,sans-serif; }
-    body { background-color: #000; color: #fff; max-width: 480px; margin: 0 auto; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+    /* START: Anti-Copy CSS */
+    body { 
+      background-color: #000; color: #fff; max-width: 480px; margin: 0 auto; overflow-x: hidden; -webkit-font-smoothing: antialiased;
+      -webkit-user-select: none; /* Safari */
+      -ms-user-select: none; /* IE 10+ */
+      user-select: none; /* Standard syntax */
+    }
+    /* END: Anti-Copy CSS */
+
+    /* Bootstrap Icons Base Style */
+    .bi { vertical-align: middle; }
 
     .loading-screen { position: fixed; inset: 0; background: #000; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 1000; }
     .loading-text { color: #aaa; font-size: 18px; animation: fadeInOut 2s infinite; margin-top: 20px; }
@@ -49,15 +59,20 @@
     .search button[type="submit"] { background-color: #4e99e9; border: none; color: #fff; cursor: pointer; padding: 10px 20px; border-radius: 20px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); position: absolute; top: 0; right: 0; height: 100%; transition: .9s ease; }
     .search button[type="submit"]:hover { transform: scale(1.1); color: rgb(255, 255, 255); background-color: blue; }
 
-    .menu-btn { background: none; border: none; color: #fff; font-size: 24px; cursor: pointer; padding: 0 10px; }
+    .menu-btn { background: none; border: none; color: #fff; font-size: 28px; cursor: pointer; padding: 0 10px; display: flex; align-items: center; justify-content: center; }
     .sidebar { height: 100%; width: 260px; position: fixed; z-index: 1200; top: 0; right: 0; left: auto; background-color: #111; overflow-x: hidden; transition: transform 0.3s ease-in-out; transform: translateX(100%); padding-top: 60px; }
     .sidebar.active { transform: translateX(0); }
     .sidebar-header { padding: 10px 20px; text-align: center; }
     .sidebar-logo { font-size: 32px; font-weight: 700; color: #007CFF; text-decoration: none; }
     .sidebar-nav { border-top: 1px solid #222; margin-top: 20px; }
-    .sidebar a { padding: 12px 20px; text-decoration: none; font-size: 16px; color: #aaa; display: block; transition: 0.3s; border-right: 3px solid transparent; border-left: none; }
-    .sidebar a:hover { color: #fff; background-color: #007CFF; border-right: 3px solid #fff; border-left: none; }
-    .sidebar-nav h3 { padding: 15px 20px 5px; font-size: 12px; text-transform: uppercase; color: #555; }
+    /* START: Sidebar Icon CSS */
+    .sidebar a { padding: 13px 20px; text-decoration: none; font-size: 16px; color: #aaa; display: flex; align-items: center; gap: 18px; transition: 0.3s; border-right: 3px solid transparent; border-left: none; }
+    .sidebar a .bi { font-size: 20px; color: #777; transition: color 0.3s; width: 24px; text-align: center; }
+    .sidebar a:hover { color: #fff; background-color: #007CFF; border-right: 3px solid #fff; }
+    .sidebar a:hover .bi { color: #fff; }
+    .sidebar-nav h3 { padding: 15px 20px 5px; font-size: 12px; text-transform: uppercase; color: #555; display: flex; align-items: center; gap: 18px; }
+    .sidebar-nav h3 .bi { font-size: 16px; }
+    /* END: Sidebar Icon CSS */
     .overlay { position: fixed; display: none; width: 100%; height: 100%; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0,0,0,0.7); z-index: 1100; cursor: pointer; }
     .overlay.active { display: block; }
 
@@ -69,6 +84,7 @@
     .slide-title { font-size: 22px; font-weight: 700; margin-bottom: 8px; text-shadow: 0 2px 4px rgba(0,0,0,.5); }
     .slide-meta { font-size: 14px; color: #ddd; display: flex; align-items: center; gap: 10px; }
     .slide-rating { display: flex; align-items: center; gap: 5px; color: #ffd700; }
+    .slide-rating .bi-star-fill { font-size: 14px; }
     .slider-indicators { position: absolute; bottom: 15px; right: 15px; display: flex; gap: 8px; }
     .indicator { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,.5); cursor: pointer; transition: .3s; }
     .indicator.active { background: #007CFF; transform: scale(1.2); }
@@ -98,13 +114,14 @@
     .detail-info { flex: 1; min-width: 0; }
     .detail-title { font-size: 26px; font-weight: 700; margin-bottom: 12px; line-height: 1.2; text-shadow: 0 2px 5px rgba(0,0,0,0.7); }
     .detail-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
-    .meta-tag { background: rgba(255, 255, 255, 0.1); padding: 5px 12px; border-radius: 15px; font-size: 12px; font-weight: 500; border: 1px solid rgba(255, 255, 255, 0.2); backdrop-filter: blur(8px); display: flex; align-items: center; gap: 5px; }
-    .meta-tag i { color: #007CFF; }
+    .meta-tag { background: rgba(255, 255, 255, 0.1); padding: 5px 12px; border-radius: 15px; font-size: 12px; font-weight: 500; border: 1px solid rgba(255, 255, 255, 0.2); backdrop-filter: blur(8px); display: flex; align-items: center; gap: 8px; }
+    .meta-tag .bi { color: #007CFF; font-size: 14px; }
     .detail-actions { margin-top: 20px; padding: 0 15px; display: flex; justify-content: center; gap: 10px; }
     .detail-actions .btn { flex: 1; padding: 12px; border-radius: 8px; border: none; font-size: 16px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
     .detail-actions .btn.primary { background-color: #007CFF; color: #fff; }
     
     .button { display: flex; justify-content: center; align-items: center; color: #fff; width: 80px; height: 80px; border-radius: 100%; background: linear-gradient(30deg, rgb(255, 0, 0) 20%, rgb(255, 0, 0) 80%); transition: all 0.3s ease-in-out 0s; box-shadow: rgba(255, 0, 0, 0.6) 0px 0px 0px 0px; animation: pulse 1.2s cubic-bezier(0.8, 0, 0, 1) 0s infinite normal none running; border: 0; cursor: pointer; }
+    .button .bi { font-size: 40px; }
     .button:is(:hover, :focus) { transform: scale(1.2); }
     @keyframes pulse { 100% { box-shadow: 0 0 0 45px rgba(255, 0, 0, 0); } }
     
@@ -121,7 +138,7 @@
     .category-page-title { font-size: 24px; font-weight: 700; }
     .content-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; padding: 0 15px 15px; }
     
-    .back-btn { position: fixed; top: 15px; left: 15px; background: rgba(0,0,0,0.1); color: #fff; border: none; width: 40px; height: 40px; border-radius: 50%; font-size: 18px; cursor: pointer; z-index: 101; display: none; transition: .3s; }
+    .back-btn { position: fixed; top: 15px; left: 15px; background: rgba(0,0,0,0.1); color: #fff; border: none; width: 40px; height: 40px; border-radius: 50%; font-size: 22px; cursor: pointer; z-index: 101; transition: .3s; display: none; align-items: center; justify-content: center; }
     
     .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,.85); color: #fff; padding: 10px 20px; border-radius: 6px; font-size: 14px; z-index: 2000; opacity: 0; transition: opacity .3s, transform .3s; }
     .toast.show { opacity: 1; transform: translateX(-50%) translateY(-10px); }
@@ -170,7 +187,7 @@
     .modal-episode-item-title { flex: 1; font-weight: 700; }
     .modal-episode-item-play {
         width: 40px; height: 40px; border-radius: 50%; background-color: #007CFF; color: #fff;
-        display: flex; align-items: center; justify-content: center; font-size: 18px;
+        display: flex; align-items: center; justify-content: center; font-size: 24px;
     }
     .modal-episode-item.active .modal-episode-item-play { background-color: #fff; color: #007CFF; }
     
@@ -178,7 +195,7 @@
         position: absolute; top: 15px; left: 15px; z-index: 1001;
         background: rgba(0,0,0,0.0); color: #fff; border: none;
         width: 40px; height: 40px; border-radius: 50%;
-        font-size: 18px; display: flex; align-items: center; justify-content: center;
+        font-size: 22px; display: flex; align-items: center; justify-content: center;
         cursor: pointer; transition: background-color .3s;
     }
     .player-back-btn:hover { background: rgba(0, 124, 255, 0.8); }
@@ -211,7 +228,7 @@
     
   </div>
 
-  <button class="back-btn" id="back-btn" onclick="history.back()"><i class="fas fa-arrow-left"></i></button>
+  <button class="back-btn" id="back-btn" onclick="history.back()"><i class="bi bi-arrow-left"></i></button>
 
   <div id="home-page" class="page active">
     <div class="header">
@@ -220,7 +237,7 @@
         <input placeholder="Search..." type="text" id="search-input" onkeyup="searchContent()">
         <button type="submit" onclick="searchContent()">Go</button>
       </div>
-      <button class="menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+      <button class="menu-btn" onclick="toggleSidebar()"><i class="bi bi-list"></i></button>
     </div>
     
     <div id="main-content-container">
@@ -277,7 +294,7 @@
   
   <div id="livetv-player-page" class="page">
       <div class="player-page-container">
-          <button class="player-back-btn" onclick="history.back()"><i class="fas fa-arrow-left"></i></button>
+          <button class="player-back-btn" onclick="history.back()"><i class="bi bi-arrow-left"></i></button>
           <iframe id="livetv-iframe-player" class="player-page-iframe" allowfullscreen></iframe>
       </div>
       <div class="current-item-info">
@@ -295,7 +312,7 @@
         <h2 id="episode-modal-title" class="episode-modal-title"></h2>
     </div>
     <div id="episode-modal-player-container" class="episode-modal-player-container">
-        <button class="player-back-btn" onclick="history.back()"><i class="fas fa-arrow-left"></i></button>
+        <button class="player-back-btn" onclick="history.back()"><i class="bi bi-arrow-left"></i></button>
         <iframe id="episode-modal-iframe-player" style="display:none;" allowfullscreen></iframe>
         <video id="episode-modal-native-player" style="display:none;" controls controlslist="nodownload" autoplay></video>
     </div>
@@ -303,7 +320,7 @@
   </div>
 
   <div class="video-player" id="video-player">
-    <button class="player-back-btn" onclick="history.back()"><i class="fas fa-arrow-left"></i></button>
+    <button class="player-back-btn" onclick="history.back()"><i class="bi bi-arrow-left"></i></button>
     <iframe id="iframe-player" style="width:100%;height:100%;border:none;display:none;" allowfullscreen></iframe>
     <video id="native-player" style="width:100%;height:100%;display:none;" controls controlslist="nodownload" autoplay></video>
   </div>
@@ -335,6 +352,18 @@
         attachRealtimeListeners();
         window.addEventListener('popstate', handlePopState);
         history.replaceState({ page: 'home-page' }, 'Home');
+        
+        // START: Anti-Copy/DevTools Script
+        document.addEventListener('contextmenu', event => event.preventDefault());
+        document.addEventListener('keydown', event => {
+          if (event.ctrlKey && (event.key === 'c' || event.key === 'u' || event.key === 's' || event.key === 'x' || event.key === 'v')) {
+            event.preventDefault();
+          }
+          if (event.key === 'F12') {
+            event.preventDefault();
+          }
+        });
+        // END: Anti-Copy/DevTools Script
     });
 
     function handlePopState(event) {
@@ -456,7 +485,7 @@
         }
 
         const isHomePage = pageId === 'home-page';
-        document.getElementById('back-btn').style.display = isHomePage ? 'none' : 'block';
+        document.getElementById('back-btn').style.display = isHomePage ? 'none' : 'flex';
 
         if (!fromPopState && (!history.state || history.state.page !== pageId)) {
             history.pushState({ page: pageId }, pageId);
@@ -469,17 +498,15 @@
         document.getElementById('detail-backdrop').innerHTML = `<img src="${item.backdrop || item.poster}" alt="" onerror="this.onerror=null; this.src='https://i.imgur.com/Z2MY6Y1.png';">`;
         document.getElementById('detail-poster').innerHTML = `<img src="${item.poster}" alt="" onerror="this.onerror=null; this.src='https://i.imgur.com/Z2MY6Y1.png';">`;
         document.getElementById('detail-title').textContent = item.title;
-        document.getElementById('detail-meta').innerHTML = `<div class="meta-tag"><i class="fas fa-calendar"></i> ${item.year || 'N/A'}</div><div class="meta-tag"><i class="fas fa-star"></i> ${item.rating || 'N/A'}</div><div class="meta-tag"><i class="fas fa-language"></i> ${item.language || 'N/A'}</div>`;
+        document.getElementById('detail-meta').innerHTML = `<div class="meta-tag"><i class="bi bi-calendar-event"></i> ${item.year || 'N/A'}</div><div class="meta-tag"><i class="bi bi-star-fill"></i> ${item.rating || 'N/A'}</div><div class="meta-tag"><i class="bi bi-translate"></i> ${item.language || 'N/A'}</div>`;
         document.getElementById('detail-storyline').textContent = item.storyline || '';
         
         const actionsContainer = document.getElementById('detail-actions');
         actionsContainer.innerHTML = '';
         if (item.type === 'webseries' && item.episodes?.length > 0) {
-            actionsContainer.innerHTML = `<button class="btn primary" onclick="openEpisodeModal('${item.id}')"><i class="fas fa-list-ul"></i> Episodes</button>`;
+            actionsContainer.innerHTML = `<button class="btn primary" onclick="openEpisodeModal('${item.id}')"><i class="bi bi-list-ul"></i> Episodes</button>`;
         } else if (item.type === 'movie') {
-            actionsContainer.innerHTML = `<button class="button" onclick="playMovie('${item.link}')">
-                <svg viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" width="26px"><path d="M424.4 214.7L72.4 6.6C43.8-10.3 0 6.1 0 47.9V464c0 37.5 40.7 60.1 72.4 41.3l352-208c31.4-18.5 31.5-64.1 0-82.6z" fill="currentColor"></path></svg>
-            </button>`;
+            actionsContainer.innerHTML = `<button class="button" onclick="playMovie('${item.link}')"><i class="bi bi-play-fill"></i></button>`;
         }
         
         const castSection = document.getElementById('cast-section');
@@ -546,7 +573,7 @@
         sliderItems.forEach((item, index) => {
             const slide = document.createElement('div');
             slide.className = 'slide';
-            slide.innerHTML = `<img src="${item.backdrop || item.poster}" alt="" onerror="this.onerror=null; this.src='https://i.imgur.com/Z2MY6Y1.png';"><div class="slide-overlay"><div class="slide-title">${item.title}</div><div class="slide-meta"><span>${item.year || ''}</span><span class="slide-rating"><i class="fas fa-star"></i> ${item.rating || ''}</span></div></div>`;
+            slide.innerHTML = `<img src="${item.backdrop || item.poster}" alt="" onerror="this.onerror=null; this.src='https://i.imgur.com/Z2MY6Y1.png';"><div class="slide-overlay"><div class="slide-title">${item.title}</div><div class="slide-meta"><span>${item.year || ''}</span><span class="slide-rating"><i class="bi bi-star-fill"></i> ${item.rating || ''}</span></div></div>`;
             slide.onclick = () => showDetailPage(item);
             slider.appendChild(slide);
 
@@ -587,7 +614,6 @@
         }
     }
     
-    // START: Updated Universal Player Function
     function openUniversalPlayer(url, iframeTargetId, videoTargetId) {
         const iframePlayer = document.getElementById(iframeTargetId);
         const nativePlayer = document.getElementById(videoTargetId);
@@ -612,11 +638,9 @@
             } else if (directDomains.some(d => hostname.includes(d))) {
                 useNative = true;
             } else {
-                // Default to iframe for unknown types, as it's safer
                 useNative = false;
             }
         } catch (e) {
-            // Fallback for URLs that can't be parsed (e.g., relative paths, though unlikely here)
             const lowerUrl = url.toLowerCase();
             useNative = directExt.some(ext => lowerUrl.endsWith(ext));
         }
@@ -630,7 +654,6 @@
             iframePlayer.style.display = 'block';
         }
     }
-    // END: Updated Universal Player Function
     
     function openVideoPlayer(url) {
         const playerContainer = document.getElementById('video-player');
@@ -691,7 +714,7 @@
             item.innerHTML = `
                 <img src="${series.poster}" alt="Thumb">
                 <div class="modal-episode-item-title">Episode ${ep.number}</div>
-                <div class="modal-episode-item-play"><i class="fas fa-play"></i></div>
+                <div class="modal-episode-item-play"><i class="bi bi-play-fill"></i></div>
             `;
             item.onclick = () => playEpisodeInModal(seriesId, index);
             listContainer.appendChild(item);
@@ -768,7 +791,8 @@
             contentToShow.forEach(item => grid.appendChild(createContentCard(item)));
         }
     }
-
+    
+    // START: Updated Sidebar Rendering Function with Bootstrap Icons
     function renderSidebarMenu() {
         const container = document.getElementById('sidebar-nav-container');
         if (!container) return;
@@ -776,16 +800,19 @@
         const mainMenuItems = ['live tv', 'movies', 'web series', 'home'];
         const uniqueCategories = [...new Set(categories)];
         const filteredCategories = uniqueCategories.filter(cat => !mainMenuItems.includes(cat.toLowerCase()));
-        let categoriesHTML = filteredCategories.map(cat => `<a href="#" onclick="event.preventDefault(); showCategoryPage('${cat}'); toggleSidebar();">${cat}</a>`).join('');
+        
+        let categoriesHTML = filteredCategories.map(cat => `<a href="#" onclick="event.preventDefault(); showCategoryPage('${cat}'); toggleSidebar();"><i class="bi bi-folder2-open"></i>${cat}</a>`).join('');
+        
         container.innerHTML = `
-            <a href="#" onclick="event.preventDefault(); showPage('home-page'); toggleSidebar();">Home</a>
-            <a href="#" onclick="event.preventDefault(); showContentListPage('movie', 'All Movies'); toggleSidebar();">Movies</a>
-            <a href="#" onclick="event.preventDefault(); showContentListPage('webseries', 'All Series'); toggleSidebar();">Web Series</a>
-            <a href="#" onclick="event.preventDefault(); showLiveTVPage(); toggleSidebar();">Live TV</a>
-            <h3>Categories</h3>
+            <a href="#" onclick="event.preventDefault(); showPage('home-page'); toggleSidebar();"><i class="bi bi-house-door-fill"></i>Home</a>
+            <a href="#" onclick="event.preventDefault(); showContentListPage('movie', 'All Movies'); toggleSidebar();"><i class="bi bi-film"></i>Movies</a>
+            <a href="#" onclick="event.preventDefault(); showContentListPage('webseries', 'All Series'); toggleSidebar();"><i class="bi bi-tv-fill"></i>Web Series</a>
+            <a href="#" onclick="event.preventDefault(); showLiveTVPage(); toggleSidebar();"><i class="bi bi-broadcast"></i>Live TV</a>
+            <h3><i class="bi bi-tags-fill"></i>Categories</h3>
             ${categoriesHTML}
         `;
     }
+    // END: Updated Sidebar Rendering Function
   </script>
 </body>
 </html>
